@@ -51,6 +51,7 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dithering.fs" />
     <Compile Include="Tiff.fs" />
     <Compile Include="Imaging.fs" />
   </ItemGroup>

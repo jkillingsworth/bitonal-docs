@@ -23,15 +23,16 @@ let private convertImageToArray (image : Bitmap) =
 
     (w, h, bytes)
 
-let private convertToMonochrome (w, h, bytes : byte[]) =
+let private convertToMonochrome dither (w, h, bytes : byte[]) =
 
-    let computeValue (x, y) =
+    let getPixelColor (x, y) =
         let i = 4 * (x + (y * w))
-        let r = int bytes.[i + 1]
-        let g = int bytes.[i + 2]
-        let b = int bytes.[i + 3]
-        let brightness = (r + r + r + b + g + g + g + g) >>> 3
-        (brightness > 127)
+        let r = bytes.[i + 1]
+        let g = bytes.[i + 2]
+        let b = bytes.[i + 3]
+        Dithering.Color(r, g, b)
+
+    let computeValue (x, y) = dither getPixelColor (x, y)
 
     (w, h, computeValue)
 
@@ -72,7 +73,7 @@ let createTiffImage width height resolution render =
 
     bitmap
     |> convertImageToArray
-    |> convertToMonochrome
+    |> convertToMonochrome (Dithering.threshold 127uy)
     |> convertTo1Bpp
     |> Tiff.createImageFile (uint32 width) (uint32 height) (uint32 resolution)
     |> Tiff.serializeImageFile
