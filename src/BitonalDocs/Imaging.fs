@@ -9,44 +9,53 @@ open System.Runtime.InteropServices
 
 let private pixelFormat = PixelFormat.Format32bppArgb
 
-let private convertTo1BppByteArray (bitmap : Bitmap) =
+let private convertImageToArray (image : Bitmap) =
 
-    let width = bitmap.Width
-    let height = bitmap.Height
+    let w = image.Width
+    let h = image.Height
 
-    let bitmapRect = Rectangle(0, 0, width, height)
-    let bitmapData = bitmap.LockBits(bitmapRect, ImageLockMode.ReadOnly, pixelFormat)
-    let bitmapByteCount = Math.Abs(bitmapData.Stride) * height
-    let bitmapBytes = Array.zeroCreate<byte> bitmapByteCount
-    Marshal.Copy(bitmapData.Scan0, bitmapBytes, 0, bitmapByteCount)
-    bitmap.UnlockBits(bitmapData)
+    let rect = Rectangle(Point.Empty, image.Size)
+    let data = image.LockBits(rect, ImageLockMode.ReadOnly, pixelFormat)
+    let byteCount = Math.Abs(data.Stride) * h
+    let bytes = Array.zeroCreate<byte> byteCount
+    Marshal.Copy(data.Scan0, bytes, 0, byteCount)
+    image.UnlockBits(data)
 
-    let stride = int (Math.Ceiling(float width / 8.0))
+    (w, h, bytes)
 
-    let inline getColor i =
-        let i = i * 4
-        let r = int bitmapBytes.[i + 1]
-        let g = int bitmapBytes.[i + 2]
-        let b = int bitmapBytes.[i + 3]
+let private convertToMonochrome (w, h, bytes : byte[]) =
+
+    let computeValue (x, y) =
+        let i = 4 * (x + (y * w))
+        let r = int bytes.[i + 1]
+        let g = int bytes.[i + 2]
+        let b = int bytes.[i + 3]
         let brightness = (r + r + r + b + g + g + g + g) >>> 3
-        match brightness > 127 with true -> 0uy | false -> 1uy
+        (brightness > 127)
+
+    (w, h, computeValue)
+
+let private convertTo1Bpp (w, h, getValue : (int * int) -> bool) =
+
+    let stride = int (Math.Ceiling(float w / 8.0))
 
     let rec reduceBits offset acc = function
         | bits when bits = 0 -> acc
         | bits ->
-            let index = offset + bits - 1
-            let pixel = getColor index
+            let x = (offset % w) + bits - 1
+            let y = (offset / w)
+            let pixel = match getValue (x, y) with true -> 0uy | false -> 1uy
             let value = acc ||| (pixel <<< (8 - bits))
             reduceBits offset value (bits - 1)
 
-    let inline getValue i =
-        let offsetY = (i / stride) * width
+    let computeValue i =
+        let offsetY = (i / stride) * w
         let offsetX = (i % stride) * 8
         let offset = offsetY + offsetX
-        let bits = Math.Min(8, width - offsetX)
+        let bits = Math.Min(8, w - offsetX)
         reduceBits offset 0uy bits
 
-    Array.Parallel.init (stride * height) getValue
+    Array.Parallel.init (stride * h) computeValue
 
 let createTiffImage width height resolution render =
 
@@ -62,6 +71,8 @@ let createTiffImage width height resolution render =
     render graphics
 
     bitmap
-    |> convertTo1BppByteArray
+    |> convertImageToArray
+    |> convertToMonochrome
+    |> convertTo1Bpp
     |> Tiff.createImageFile (uint32 width) (uint32 height) (uint32 resolution)
     |> Tiff.serializeImageFile
