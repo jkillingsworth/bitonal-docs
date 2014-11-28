@@ -1,4 +1,4 @@
-﻿module Example
+﻿module Example1
 
 open System.Drawing
 open System.Drawing.Text
