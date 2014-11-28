@@ -1,7 +1,31 @@
-﻿// Learn more about F# at http://fsharp.net
-// See the 'F# Tutorial' project for more help.
+﻿module Example2
+
+open System.Drawing
+open System.Drawing.Text
+open System.IO
+open System.Reflection
+open BitonalDocs.Imaging
+
+//-------------------------------------------------------------------------------------------------
+
+let private render (g : Graphics) =
+
+    g.PageUnit <- GraphicsUnit.Inch
+
+    let assembly = Assembly.GetExecutingAssembly()
+    use stream = assembly.GetManifestResourceStream("Lenna.tiff")
+    use image = Image.FromStream(stream)
+
+    g.DrawImage(image, Point.Empty)
 
 [<EntryPoint>]
-let main argv = 
-    printfn "%A" argv
-    0 // return an integer exit code
+let main argv =
+
+    let sw = System.Diagnostics.Stopwatch.StartNew()
+
+    let bytes = createTiffImage 5.33f 5.33f 96 render
+    File.WriteAllBytes(@"..\..\..\output.tiff", bytes)
+
+    sw.Stop()
+    printfn "%i" sw.ElapsedMilliseconds
+    0

@@ -52,11 +52,13 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.fs" />
     <None Include="App.config" />
+    <EmbeddedResource Include="Lenna.tiff" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BitonalDocs\BitonalDocs.fsproj">
