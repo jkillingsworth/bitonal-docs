@@ -22,6 +22,8 @@ A library for creating bi-level monochrome TIFF images.
 
 * [Tanner Helland - Image Dithering](http://www.tannerhelland.com/4660/dithering-eleven-algorithms-source-code/)
 * [Tanner Helland - Grayscale Conversion](http://www.tannerhelland.com/3643/grayscale-image-algorithm-vb6/)
+* [Libcaca Study - Halftoning](http://caca.zoy.org/wiki/libcaca/study/2)
+* [Libcaca Study - Error Diffusion](http://caca.zoy.org/wiki/libcaca/study/3)
 * [Lee Crocker et al. - Digital Halftoning](http://www.efg2.com/Lab/Library/ImageProcessing/DHALF.TXT)
 * [Michalis Zervos - Image Dithering in Matlab](http://michal.is/projects/image-dithering-in-matlab/)
 
