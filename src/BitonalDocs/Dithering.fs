@@ -15,18 +15,6 @@ type GetPixelColor = (int * int) -> Color
 
 //-------------------------------------------------------------------------------------------------
 
-let private computeBrightness (getPixelColor : GetPixelColor) (x, y) =
-
-    let color = getPixelColor (x, y)
-    let r = int color.R * 2
-    let g = int color.G * 5
-    let b = int color.B * 1
-    let brightness = (r + g + b) / 8
-
-    byte brightness
-
-let threshold value getPixelColor (x, y) = computeBrightness getPixelColor (x, y) > value
-
 module Matrix =
 
     let bayer8x8 =
@@ -48,6 +36,20 @@ module Matrix =
     let bayer2x2 =
         [ [ 00uy; 03uy ]
           [ 02uy; 01uy ] ]
+
+//-------------------------------------------------------------------------------------------------
+
+let private computeBrightness (getPixelColor : GetPixelColor) (x, y) =
+
+    let color = getPixelColor (x, y)
+    let r = int color.R * 2
+    let g = int color.G * 5
+    let b = int color.B * 1
+    let brightness = (r + g + b) / 8
+
+    byte brightness
+
+let threshold value getPixelColor (x, y) = computeBrightness getPixelColor (x, y) > value
 
 let ordered (matrix : seq<#seq<byte>>) getPixelColor (x, y) =
 
