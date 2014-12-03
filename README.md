@@ -37,6 +37,7 @@ A library for creating bi-level monochrome TIFF images.
 
 * Compression
 * Dithering
+* Performance
 * Big endian byte order
 * Multi-strip support
 * Multi-page support
