@@ -73,7 +73,7 @@ let createTiffImage width height resolution render =
 
     bitmap
     |> convertImageToArray
-    |> convertToMonochrome (Dithering.threshold 127uy)
+    |> convertToMonochrome (Dithering.thresholdFixed 127uy)
     |> convertTo1Bpp
     |> Tiff.createImageFile (uint32 width) (uint32 height) (uint32 resolution)
     |> Tiff.serializeImageFile

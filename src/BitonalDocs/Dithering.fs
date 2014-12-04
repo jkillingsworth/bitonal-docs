@@ -17,45 +17,60 @@ type GetPixelColor = (int * int) -> Color
 
 module Matrix =
 
+    let createMatrix thresholds =
+
+        let array = array2D thresholds
+        let m = Array2D.length1 array
+        let n = Array2D.length2 array
+        let mapping i = byte (((1 + i) * 256) / (1 + (m * n)))
+
+        Array2D.map mapping array
+
     let dispersed8x8 =
-        [ [ 00uy; 48uy; 12uy; 60uy; 03uy; 51uy; 15uy; 63uy ]
-          [ 32uy; 16uy; 44uy; 28uy; 35uy; 19uy; 47uy; 31uy ]
-          [ 08uy; 56uy; 04uy; 52uy; 11uy; 59uy; 07uy; 55uy ]
-          [ 40uy; 24uy; 36uy; 20uy; 43uy; 27uy; 39uy; 23uy ]
-          [ 02uy; 50uy; 14uy; 62uy; 01uy; 49uy; 13uy; 61uy ]
-          [ 34uy; 18uy; 46uy; 30uy; 33uy; 17uy; 45uy; 29uy ]
-          [ 10uy; 58uy; 06uy; 54uy; 09uy; 57uy; 05uy; 53uy ]
-          [ 42uy; 26uy; 38uy; 22uy; 41uy; 25uy; 37uy; 21uy ] ]
+        createMatrix
+            [ [ 00; 48; 12; 60; 03; 51; 15; 63 ]
+              [ 32; 16; 44; 28; 35; 19; 47; 31 ]
+              [ 08; 56; 04; 52; 11; 59; 07; 55 ]
+              [ 40; 24; 36; 20; 43; 27; 39; 23 ]
+              [ 02; 50; 14; 62; 01; 49; 13; 61 ]
+              [ 34; 18; 46; 30; 33; 17; 45; 29 ]
+              [ 10; 58; 06; 54; 09; 57; 05; 53 ]
+              [ 42; 26; 38; 22; 41; 25; 37; 21 ] ]
 
     let dispersed4x4 =
-        [ [ 00uy; 12uy; 03uy; 15uy ]
-          [ 08uy; 04uy; 11uy; 07uy ]
-          [ 02uy; 14uy; 01uy; 13uy ]
-          [ 10uy; 06uy; 09uy; 05uy ] ]
+        createMatrix
+            [ [ 00; 12; 03; 15 ]
+              [ 08; 04; 11; 07 ]
+              [ 02; 14; 01; 13 ]
+              [ 10; 06; 09; 05 ] ]
 
     let dispersed2x2 =
-        [ [ 00uy; 03uy ]
-          [ 02uy; 01uy ] ]
+        createMatrix
+            [ [ 00; 03 ]
+              [ 02; 01 ] ]
 
     let clustered8x8 =
-        [ [ 24uy; 10uy; 12uy; 26uy; 35uy; 47uy; 49uy; 37uy ]
-          [ 08uy; 00uy; 02uy; 14uy; 45uy; 59uy; 61uy; 51uy ]
-          [ 22uy; 06uy; 04uy; 16uy; 43uy; 57uy; 63uy; 53uy ]
-          [ 30uy; 20uy; 18uy; 28uy; 33uy; 41uy; 55uy; 39uy ]
-          [ 34uy; 46uy; 48uy; 36uy; 25uy; 11uy; 13uy; 27uy ]
-          [ 44uy; 58uy; 60uy; 50uy; 09uy; 01uy; 03uy; 15uy ]
-          [ 42uy; 56uy; 62uy; 52uy; 23uy; 07uy; 05uy; 17uy ]
-          [ 32uy; 40uy; 54uy; 38uy; 31uy; 21uy; 19uy; 29uy ] ]
+        createMatrix
+            [ [ 24; 10; 12; 26; 35; 47; 49; 37 ]
+              [ 08; 00; 02; 14; 45; 59; 61; 51 ]
+              [ 22; 06; 04; 16; 43; 57; 63; 53 ]
+              [ 30; 20; 18; 28; 33; 41; 55; 39 ]
+              [ 34; 46; 48; 36; 25; 11; 13; 27 ]
+              [ 44; 58; 60; 50; 09; 01; 03; 15 ]
+              [ 42; 56; 62; 52; 23; 07; 05; 17 ]
+              [ 32; 40; 54; 38; 31; 21; 19; 29 ] ]
 
     let clustered4x4 =
-        [ [ 12uy; 05uy; 06uy; 13uy ]
-          [ 04uy; 00uy; 01uy; 07uy ]
-          [ 11uy; 03uy; 02uy; 08uy ]
-          [ 15uy; 10uy; 09uy; 14uy ] ]
+        createMatrix
+            [ [ 12; 05; 06; 13 ]
+              [ 04; 00; 01; 07 ]
+              [ 11; 03; 02; 08 ]
+              [ 15; 10; 09; 14 ] ]
 
     let clustered2x2 =
-        [ [ 00uy; 01uy ]
-          [ 03uy; 02uy ] ]
+        createMatrix
+            [ [ 00; 01 ]
+              [ 03; 02 ] ]
 
 //-------------------------------------------------------------------------------------------------
 
@@ -69,17 +84,12 @@ let private computeBrightness (getPixelColor : GetPixelColor) (x, y) =
 
     byte brightness
 
-let threshold value getPixelColor (x, y) = computeBrightness getPixelColor (x, y) > value
+let thresholdFixed value getPixelColor (x, y) = computeBrightness getPixelColor (x, y) > value
 
-let ordered (matrix : seq<#seq<byte>>) getPixelColor (x, y) =
+let thresholdOrdered matrix getPixelColor (x, y) =
 
-    let brightness = computeBrightness getPixelColor (x, y)
-    let shades = int System.Byte.MaxValue + 1
-    let matrix = array2D matrix
     let m = Array2D.length1 matrix
     let n = Array2D.length2 matrix
-    let i = matrix.[x % m, y % n]
-    let value = ((1 + int i) * shades) / (1 + (m * n))
-    let value = byte value
+    let value = matrix.[x % m, y % n]
 
-    brightness > value
+    thresholdFixed value getPixelColor (x, y)
