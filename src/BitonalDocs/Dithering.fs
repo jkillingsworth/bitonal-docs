@@ -37,6 +37,26 @@ module Matrix =
         [ [ 00uy; 03uy ]
           [ 02uy; 01uy ] ]
 
+    let clustered8x8 =
+        [ [ 24uy; 10uy; 12uy; 26uy; 35uy; 47uy; 49uy; 37uy ]
+          [ 08uy; 00uy; 02uy; 14uy; 45uy; 59uy; 61uy; 51uy ]
+          [ 22uy; 06uy; 04uy; 16uy; 43uy; 57uy; 63uy; 53uy ]
+          [ 30uy; 20uy; 18uy; 28uy; 33uy; 41uy; 55uy; 39uy ]
+          [ 34uy; 46uy; 48uy; 36uy; 25uy; 11uy; 13uy; 27uy ]
+          [ 44uy; 58uy; 60uy; 50uy; 09uy; 01uy; 03uy; 15uy ]
+          [ 42uy; 56uy; 62uy; 52uy; 23uy; 07uy; 05uy; 17uy ]
+          [ 32uy; 40uy; 54uy; 38uy; 31uy; 21uy; 19uy; 29uy ] ]
+
+    let clustered4x4 =
+        [ [ 12uy; 05uy; 06uy; 13uy ]
+          [ 04uy; 00uy; 01uy; 07uy ]
+          [ 11uy; 03uy; 02uy; 08uy ]
+          [ 15uy; 10uy; 09uy; 14uy ] ]
+
+    let clustered2x2 =
+        [ [ 00uy; 01uy ]
+          [ 03uy; 02uy ] ]
+
 //-------------------------------------------------------------------------------------------------
 
 let private computeBrightness (getPixelColor : GetPixelColor) (x, y) =
