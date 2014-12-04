@@ -17,7 +17,7 @@ type GetPixelColor = (int * int) -> Color
 
 module Matrix =
 
-    let bayer8x8 =
+    let dispersed8x8 =
         [ [ 00uy; 48uy; 12uy; 60uy; 03uy; 51uy; 15uy; 63uy ]
           [ 32uy; 16uy; 44uy; 28uy; 35uy; 19uy; 47uy; 31uy ]
           [ 08uy; 56uy; 04uy; 52uy; 11uy; 59uy; 07uy; 55uy ]
@@ -27,13 +27,13 @@ module Matrix =
           [ 10uy; 58uy; 06uy; 54uy; 09uy; 57uy; 05uy; 53uy ]
           [ 42uy; 26uy; 38uy; 22uy; 41uy; 25uy; 37uy; 21uy ] ]
 
-    let bayer4x4 =
+    let dispersed4x4 =
         [ [ 00uy; 12uy; 03uy; 15uy ]
           [ 08uy; 04uy; 11uy; 07uy ]
           [ 02uy; 14uy; 01uy; 13uy ]
           [ 10uy; 06uy; 09uy; 05uy ] ]
 
-    let bayer2x2 =
+    let dispersed2x2 =
         [ [ 00uy; 03uy ]
           [ 02uy; 01uy ] ]
 
