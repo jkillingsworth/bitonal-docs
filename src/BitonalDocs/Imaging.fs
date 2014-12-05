@@ -58,22 +58,21 @@ let private convertTo1Bpp (w, h, getValue : (int * int) -> bool) =
 
     Array.Parallel.init (stride * h) computeValue
 
-let createTiffImage width height resolution render =
+let createTiffImage w h resolution render =
 
     let resolution = float32 resolution
-    let width = int (resolution * width)
-    let height = int (resolution * height)
+    let w = int (Math.Ceiling(float (resolution * w)))
+    let h = int (Math.Ceiling(float (resolution * h)))
 
-    use bitmap = new Bitmap(width, height, pixelFormat)
+    use bitmap = new Bitmap(w, h, pixelFormat)
     bitmap.SetResolution(resolution, resolution)
 
     use graphics = Graphics.FromImage(bitmap)
-    graphics.FillRectangle(Brushes.White, Rectangle(0, 0, width, height))
     render graphics
 
     bitmap
     |> convertImageToArray
     |> convertToMonochrome (Dithering.thresholdFixed 127uy)
     |> convertTo1Bpp
-    |> Tiff.createImageFile (uint32 width) (uint32 height) (uint32 resolution)
+    |> Tiff.createImageFile (uint32 w) (uint32 h) (uint32 resolution)
     |> Tiff.serializeImageFile

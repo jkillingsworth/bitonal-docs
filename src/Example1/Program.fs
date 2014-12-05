@@ -11,6 +11,8 @@ let private render (g : Graphics) =
 
     g.PageUnit <- GraphicsUnit.Inch
 
+    g.FillRectangle(Brushes.White, RectangleF(0.0f, 0.0f, 8.5f, 11.0f))
+
     let fontFamily = new FontFamily(GenericFontFamilies.Serif)
     use font = new Font(fontFamily, 12.0f)
 
