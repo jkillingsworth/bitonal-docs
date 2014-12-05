@@ -21,23 +21,27 @@ let private convertImageToArray (image : Bitmap) =
     Marshal.Copy(data.Scan0, bytes, 0, byteCount)
     image.UnlockBits(data)
 
-    (w, h, bytes)
-
-let private convertToMonochrome dither (w, h, bytes : byte[]) =
-
-    let getPixelColor (x, y) =
-        let i = 4 * (x + (y * w))
+    let computeValue x y =
+        let i = ((y * w) + x) * 4
         let r = bytes.[i + 1]
         let g = bytes.[i + 2]
         let b = bytes.[i + 3]
         Dithering.Color(r, g, b)
 
-    let computeValue (x, y) = dither getPixelColor (x, y)
+    Array2D.init w h computeValue
 
-    (w, h, computeValue)
+let private convertToMonochrome dither (image : Dithering.Color[,]) =
 
-let private convertTo1Bpp (w, h, getValue : (int * int) -> bool) =
+    let computeValue x y = dither image (x, y)
+    let w = Array2D.length1 image
+    let h = Array2D.length2 image
 
+    Array2D.init w h computeValue
+
+let private convertTo1Bpp (image : bool[,]) =
+
+    let w = Array2D.length1 image
+    let h = Array2D.length2 image
     let stride = int (Math.Ceiling(float w / 8.0))
 
     let rec reduceBits offset acc = function
@@ -45,7 +49,7 @@ let private convertTo1Bpp (w, h, getValue : (int * int) -> bool) =
         | bits ->
             let x = (offset % w) + bits - 1
             let y = (offset / w)
-            let pixel = match getValue (x, y) with true -> 0uy | false -> 1uy
+            let pixel = match image.[x, y] with true -> 0uy | false -> 1uy
             let value = acc ||| (pixel <<< (8 - bits))
             reduceBits offset value (bits - 1)
 

@@ -11,8 +11,6 @@ type Color =
 
     new (r, g, b) = { R = r; G = g; B = b }
 
-type GetPixelColor = (int * int) -> Color
-
 //-------------------------------------------------------------------------------------------------
 
 module Matrix =
@@ -74,9 +72,9 @@ module Matrix =
 
 //-------------------------------------------------------------------------------------------------
 
-let private computeBrightness (getPixelColor : GetPixelColor) (x, y) =
+let private computeBrightness (image : Color[,]) (x, y) =
 
-    let color = getPixelColor (x, y)
+    let color = image.[x, y]
     let r = int color.R * 2
     let g = int color.G * 5
     let b = int color.B * 1
@@ -84,12 +82,12 @@ let private computeBrightness (getPixelColor : GetPixelColor) (x, y) =
 
     byte brightness
 
-let thresholdFixed value getPixelColor (x, y) = computeBrightness getPixelColor (x, y) > value
+let thresholdFixed value image (x, y) = computeBrightness image (x, y) > value
 
-let thresholdOrdered matrix getPixelColor (x, y) =
+let thresholdOrdered matrix image (x, y) =
 
     let m = Array2D.length1 matrix
     let n = Array2D.length2 matrix
     let value = matrix.[x % m, y % n]
 
-    thresholdFixed value getPixelColor (x, y)
+    thresholdFixed value image (x, y)
