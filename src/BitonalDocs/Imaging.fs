@@ -23,9 +23,9 @@ let private convertImageToArray (image : Bitmap) =
 
     let computeValue x y =
         let i = ((y * w) + x) * 4
-        let r = bytes.[i + 1]
-        let g = bytes.[i + 2]
-        let b = bytes.[i + 3]
+        let r = bytes.[i + 2]
+        let g = bytes.[i + 1]
+        let b = bytes.[i + 0]
         Dithering.Color(r, g, b)
 
     Array2D.init w h computeValue
