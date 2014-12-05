@@ -72,7 +72,7 @@ module Matrix =
 
 //-------------------------------------------------------------------------------------------------
 
-let private computeBrightness (image : Color[,]) (x, y) =
+let private computeBrightness (image : Color[,]) x y =
 
     let color = image.[x, y]
     let r = int color.R * 2
@@ -82,12 +82,26 @@ let private computeBrightness (image : Color[,]) (x, y) =
 
     byte brightness
 
-let thresholdFixed value image (x, y) = computeBrightness image (x, y) > value
+let private computeThresholdFixed threshold image x y =
 
-let thresholdOrdered matrix image (x, y) =
+    let brightness = computeBrightness image x y
+    brightness > threshold
+
+let private computeThresholdOrdered matrix image x y =
 
     let m = Array2D.length1 matrix
     let n = Array2D.length2 matrix
-    let value = matrix.[x % m, y % n]
+    let threshold = matrix.[x % m, y % n]
+    computeThresholdFixed threshold image x y
 
-    thresholdFixed value image (x, y)
+let thresholdFixed threshold image =
+
+    let w = Array2D.length1 image
+    let h = Array2D.length2 image
+    Array2D.init w h (computeThresholdFixed threshold image)
+
+let thresholdOrdered matrix image =
+
+    let w = Array2D.length1 image
+    let h = Array2D.length2 image
+    Array2D.init w h (computeThresholdOrdered matrix image)

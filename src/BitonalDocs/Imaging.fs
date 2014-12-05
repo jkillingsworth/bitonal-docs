@@ -30,14 +30,6 @@ let private convertImageToArray (image : Bitmap) =
 
     Array2D.init w h computeValue
 
-let private convertToMonochrome dither (image : Dithering.Color[,]) =
-
-    let computeValue x y = dither image (x, y)
-    let w = Array2D.length1 image
-    let h = Array2D.length2 image
-
-    Array2D.init w h computeValue
-
 let private convertTo1Bpp (image : bool[,]) =
 
     let w = Array2D.length1 image
@@ -76,7 +68,7 @@ let createTiffImage w h resolution render =
 
     bitmap
     |> convertImageToArray
-    |> convertToMonochrome (Dithering.thresholdFixed 127uy)
+    |> Dithering.thresholdFixed 127uy
     |> convertTo1Bpp
     |> Tiff.createImageFile (uint32 w) (uint32 h) (uint32 resolution)
     |> Tiff.serializeImageFile
