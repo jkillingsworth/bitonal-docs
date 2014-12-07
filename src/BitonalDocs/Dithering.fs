@@ -81,11 +81,10 @@ module Matrix =
 let private computeBrightness (image : Color[,]) x y =
 
     let color = image.[x, y]
-    let r = int color.R * 2
-    let g = int color.G * 5
-    let b = int color.B * 1
-    let brightness = (r + g + b) / 8
-
+    let r = int color.R * 2126
+    let g = int color.G * 7152
+    let b = int color.B * 0722
+    let brightness = (r + g + b) / 10000
     byte brightness
 
 let private computeThresholdFixed threshold image x y =
