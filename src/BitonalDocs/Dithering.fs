@@ -11,6 +11,10 @@ type Color =
 
     new (r, g, b) = { R = r; G = g; B = b }
 
+type ThresholdType =
+    | Fixed of byte
+    | Ordered of byte[,]
+
 //-------------------------------------------------------------------------------------------------
 
 module Matrix =
@@ -19,7 +23,8 @@ module Matrix =
 
         let array = array2D thresholds
         let mapping i = byte (((1 + i) * 256) / (1 + levels))
-        Array2D.map mapping array
+        let matrix = Array2D.map mapping array
+        Ordered matrix
 
     let dispersed8x8 =
         createMatrix (8 * 8)
@@ -197,29 +202,22 @@ let private computeBrightness (image : Color[,]) x y =
     let brightness = (r + g + b) / 10000
     byte brightness
 
-let private computeThresholdFixed threshold image x y =
+let threshold pattern image =
 
-    let brightness = computeBrightness image x y
-    brightness > threshold
+    let computeThreshold matrix image x y =
+        let m = Array2D.length1 matrix
+        let n = Array2D.length2 matrix
+        let brightness = computeBrightness image x y
+        let threshold = matrix.[x % m, y % n]
+        brightness > threshold
 
-let private computeThresholdOrdered matrix image x y =
-
-    let m = Array2D.length1 matrix
-    let n = Array2D.length2 matrix
-    let threshold = matrix.[x % m, y % n]
-    computeThresholdFixed threshold image x y
-
-let thresholdFixed threshold image =
-
-    let w = Array2D.length1 image
-    let h = Array2D.length2 image
-    Array2D.init w h (computeThresholdFixed threshold image)
-
-let thresholdOrdered matrix image =
+    let rec initialize = function
+        | Fixed(value) -> initialize (Ordered (array2D [[ value ]]))
+        | Ordered(matrix) -> computeThreshold matrix
 
     let w = Array2D.length1 image
     let h = Array2D.length2 image
-    Array2D.init w h (computeThresholdOrdered matrix image)
+    Array2D.init w h (initialize pattern image)
 
 let errorDiffusion filter image =
 

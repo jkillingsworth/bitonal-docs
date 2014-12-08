@@ -9,7 +9,7 @@ open System.Runtime.InteropServices
 
 let private pixelFormat = PixelFormat.Format32bppArgb
 
-let private convertImageToArray (image : Bitmap) =
+let private convertImageToColorArray (image : Bitmap) =
 
     let w = image.Width
     let h = image.Height
@@ -67,8 +67,8 @@ let createTiffImage w h resolution render =
     render graphics
 
     bitmap
-    |> convertImageToArray
-    |> Dithering.thresholdFixed 127uy
+    |> convertImageToColorArray
+    |> Dithering.threshold (Dithering.Fixed 127uy)
     |> convertTo1Bpp
     |> Tiff.createImageFile (uint32 w) (uint32 h) (uint32 resolution)
     |> Tiff.serializeImageFile
