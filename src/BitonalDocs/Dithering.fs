@@ -78,6 +78,21 @@ module Matrix =
 
 //-------------------------------------------------------------------------------------------------
 
+module Filter =
+
+    type Element = { X : int; Y : int; Coefficient : int; Divisor : int }
+
+    let simple =
+        [| { X = +1; Y =  0; Coefficient = 1; Divisor =  1 } |]
+
+    let floydSteinberg =
+        [| { X = +1; Y =  0; Coefficient = 7; Divisor = 16 }
+           { X = -1; Y = +1; Coefficient = 3; Divisor = 16 }
+           { X =  0; Y = +1; Coefficient = 5; Divisor = 16 }
+           { X = +1; Y = +1; Coefficient = 1; Divisor = 16 } |]
+
+//-------------------------------------------------------------------------------------------------
+
 let private computeBrightness (image : Color[,]) x y =
 
     let color = image.[x, y]
@@ -110,3 +125,36 @@ let thresholdOrdered matrix image =
     let w = Array2D.length1 image
     let h = Array2D.length2 image
     Array2D.init w h (computeThresholdOrdered matrix image)
+
+let errorDiffusion filter image =
+
+    let w = Array2D.length1 image
+    let h = Array2D.length2 image
+    let pixels = Array2D.zeroCreate<bool> w h
+    let errors = Array2D.zeroCreate<sbyte> w h
+
+    let computePixelAndError x y =
+        let brightness = computeBrightness image x y
+        let value = int brightness + int errors.[x, y]
+        let pixel = value > 127
+        let error = sbyte (match pixel with true -> (value - 255) | false -> value)
+        pixel, error
+
+    let writePixel pixel x y =
+        pixels.[x, y] <- pixel
+
+    let writeError error x y =
+        for (element : Filter.Element) in filter do
+            let x = x + element.X
+            let y = y + element.Y
+            if (0 <= x && x < w) && (0 <= y && y < h) then
+                let error = (int error * element.Coefficient) / element.Divisor
+                errors.[x, y] <- errors.[x, y] + sbyte error
+
+    for y = 0 to h - 1 do
+        for x = 0 to w - 1 do
+            let pixel, error = computePixelAndError x y
+            writePixel pixel x y
+            writeError error x y
+
+    pixels
