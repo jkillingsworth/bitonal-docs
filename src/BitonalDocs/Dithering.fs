@@ -82,14 +82,109 @@ module Filter =
 
     type Element = { X : int; Y : int; Coefficient : int; Divisor : int }
 
-    let simple =
+    let basic =
         [| { X = +1; Y =  0; Coefficient = 1; Divisor =  1 } |]
+
+    let falseFloydSteinberg =
+        [| { X = +1; Y =  0; Coefficient = 3; Divisor =  8 }
+           { X =  0; Y = +1; Coefficient = 3; Divisor =  8 }
+           { X = +1; Y = +1; Coefficient = 2; Divisor =  8 } |]
 
     let floydSteinberg =
         [| { X = +1; Y =  0; Coefficient = 7; Divisor = 16 }
            { X = -1; Y = +1; Coefficient = 3; Divisor = 16 }
            { X =  0; Y = +1; Coefficient = 5; Divisor = 16 }
            { X = +1; Y = +1; Coefficient = 1; Divisor = 16 } |]
+
+    let jarvisJudiceNinke =
+        [| { X = +1; Y =  0; Coefficient = 7; Divisor = 48 }
+           { X = +2; Y =  0; Coefficient = 5; Divisor = 48 }
+           { X = -2; Y = +1; Coefficient = 3; Divisor = 48 }
+           { X = -1; Y = +1; Coefficient = 5; Divisor = 48 }
+           { X =  0; Y = +1; Coefficient = 7; Divisor = 48 }
+           { X = +1; Y = +1; Coefficient = 5; Divisor = 48 }
+           { X = +2; Y = +1; Coefficient = 3; Divisor = 48 }
+           { X = -2; Y = +2; Coefficient = 1; Divisor = 48 }
+           { X = -1; Y = +2; Coefficient = 3; Divisor = 48 }
+           { X =  0; Y = +2; Coefficient = 5; Divisor = 48 }
+           { X = +1; Y = +2; Coefficient = 3; Divisor = 48 }
+           { X = +2; Y = +2; Coefficient = 1; Divisor = 48 } |]
+
+    let stucki =
+        [| { X = +1; Y =  0; Coefficient = 8; Divisor = 42 }
+           { X = +2; Y =  0; Coefficient = 4; Divisor = 42 }
+           { X = -2; Y = +1; Coefficient = 2; Divisor = 42 }
+           { X = -1; Y = +1; Coefficient = 4; Divisor = 42 }
+           { X =  0; Y = +1; Coefficient = 8; Divisor = 42 }
+           { X = +1; Y = +1; Coefficient = 4; Divisor = 42 }
+           { X = +2; Y = +1; Coefficient = 2; Divisor = 42 }
+           { X = -2; Y = +2; Coefficient = 1; Divisor = 42 }
+           { X = -1; Y = +2; Coefficient = 2; Divisor = 42 }
+           { X =  0; Y = +2; Coefficient = 4; Divisor = 42 }
+           { X = +1; Y = +2; Coefficient = 2; Divisor = 42 }
+           { X = +2; Y = +2; Coefficient = 1; Divisor = 42 } |]
+
+    let burkes =
+        [| { X = +1; Y =  0; Coefficient = 8; Divisor = 32 }
+           { X = +2; Y =  0; Coefficient = 4; Divisor = 32 }
+           { X = -2; Y = +1; Coefficient = 2; Divisor = 32 }
+           { X = -1; Y = +1; Coefficient = 4; Divisor = 32 }
+           { X =  0; Y = +1; Coefficient = 8; Divisor = 32 }
+           { X = +1; Y = +1; Coefficient = 4; Divisor = 32 }
+           { X = +2; Y = +1; Coefficient = 2; Divisor = 32 } |]
+
+    let sierra3Row =
+        [| { X = +1; Y =  0; Coefficient = 5; Divisor = 32 }
+           { X = +2; Y =  0; Coefficient = 3; Divisor = 32 }
+           { X = -2; Y = +1; Coefficient = 2; Divisor = 32 }
+           { X = -1; Y = +1; Coefficient = 4; Divisor = 32 }
+           { X =  0; Y = +1; Coefficient = 5; Divisor = 32 }
+           { X = +1; Y = +1; Coefficient = 4; Divisor = 32 }
+           { X = +2; Y = +1; Coefficient = 2; Divisor = 32 }
+           { X = -1; Y = +2; Coefficient = 2; Divisor = 32 }
+           { X =  0; Y = +2; Coefficient = 3; Divisor = 32 }
+           { X = +1; Y = +2; Coefficient = 2; Divisor = 32 } |]
+
+    let sierra2Row =
+        [| { X = +1; Y =  0; Coefficient = 4; Divisor = 16 }
+           { X = +2; Y =  0; Coefficient = 3; Divisor = 16 }
+           { X = -2; Y = +1; Coefficient = 1; Divisor = 16 }
+           { X = -1; Y = +1; Coefficient = 2; Divisor = 16 }
+           { X =  0; Y = +1; Coefficient = 3; Divisor = 16 }
+           { X = +1; Y = +1; Coefficient = 2; Divisor = 16 }
+           { X = +2; Y = +1; Coefficient = 1; Divisor = 16 } |]
+
+    let sierraLite =
+        [| { X = +1; Y =  0; Coefficient = 2; Divisor =  4 }
+           { X = -1; Y = +1; Coefficient = 1; Divisor =  4 }
+           { X =  0; Y = +1; Coefficient = 1; Divisor =  4 } |]
+
+    let atkinson =
+        [| { X = +1; Y =  0; Coefficient = 1; Divisor =  8 }
+           { X = +2; Y =  0; Coefficient = 1; Divisor =  8 }
+           { X = -1; Y = +1; Coefficient = 1; Divisor =  8 }
+           { X =  0; Y = +1; Coefficient = 1; Divisor =  8 }
+           { X = +1; Y = +1; Coefficient = 1; Divisor =  8 }
+           { X =  0; Y = +2; Coefficient = 1; Divisor =  8 } |]
+
+    let zhigangFan =
+        [| { X = +1; Y =  0; Coefficient = 7; Divisor = 16 }
+           { X = -1; Y = +1; Coefficient = 1; Divisor = 16 }
+           { X =  0; Y = +1; Coefficient = 3; Divisor = 16 }
+           { X = +1; Y = +1; Coefficient = 5; Divisor = 16 } |]
+
+    let shiauFan1 =
+        [| { X = +1; Y =  0; Coefficient = 4; Divisor =  8 }
+           { X = -2; Y = +1; Coefficient = 1; Divisor =  8 }
+           { X = -1; Y = +1; Coefficient = 1; Divisor =  8 }
+           { X =  0; Y = +1; Coefficient = 2; Divisor =  8 } |]
+
+    let shiauFan2 =
+        [| { X = +1; Y =  0; Coefficient = 8; Divisor = 16 }
+           { X = -3; Y = +1; Coefficient = 1; Divisor = 16 }
+           { X = -2; Y = +1; Coefficient = 1; Divisor = 16 }
+           { X = -1; Y = +1; Coefficient = 2; Divisor = 16 }
+           { X =  0; Y = +1; Coefficient = 4; Divisor = 16 } |]
 
 //-------------------------------------------------------------------------------------------------
 
