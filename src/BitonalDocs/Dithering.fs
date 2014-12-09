@@ -2,6 +2,10 @@
 
 //-------------------------------------------------------------------------------------------------
 
+type DitheringType =
+    | Threshold' of byte[,]
+    | ErrorDiffusion' of ((int * int * int)[] * int)
+
 [<Struct>]
 type Color =
 
@@ -10,10 +14,6 @@ type Color =
     val B : byte
 
     new (r, g, b) = { R = r; G = g; B = b }
-
-type DitheringType =
-    | Threshold' of byte[,]
-    | ErrorDiffusion' of ((int * int * int)[] * int)
 
 //-------------------------------------------------------------------------------------------------
 
@@ -264,9 +264,7 @@ let private ditherErrorDiffusion filter image =
     pixels
 
 let dither = function
-    | Threshold'(matrix)
-        -> matrix
-        |> ditherThreshold
-    | ErrorDiffusion'(filter)
-        -> filter
-        |> ditherErrorDiffusion
+    | Threshold'
+        matrix -> matrix |> ditherThreshold
+    | ErrorDiffusion'
+        filter -> filter |> ditherErrorDiffusion
