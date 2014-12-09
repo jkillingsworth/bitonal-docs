@@ -11,11 +11,9 @@ type Color =
 
     new (r, g, b) = { R = r; G = g; B = b }
 
-type ErrorDiffusionElement = { X : int; Y : int; Coefficient : int; Divisor : int }
-
 type DitheringType =
     | Threshold' of byte[,]
-    | ErrorDiffusion' of ErrorDiffusionElement[]
+    | ErrorDiffusion' of ((int * int * int)[] * int)
 
 //-------------------------------------------------------------------------------------------------
 
@@ -88,124 +86,124 @@ module Threshold =
 
 module ErrorDiffusion =
 
-    let createFilter elements = ErrorDiffusion' elements
+    let createFilter divisor coefficients = ErrorDiffusion' (coefficients, divisor)
 
     let basic =
-        createFilter
-            [| { X = +1; Y =  0; Coefficient = 1; Divisor =  1 } |]
+        createFilter 01
+            [| ( 1, +1,  0 ) |]
 
     let falseFloydSteinberg =
-        createFilter
-            [| { X = +1; Y =  0; Coefficient = 3; Divisor =  8 }
-               { X =  0; Y = +1; Coefficient = 3; Divisor =  8 }
-               { X = +1; Y = +1; Coefficient = 2; Divisor =  8 } |]
+        createFilter 08
+            [| ( 3, +1,  0 )
+               ( 3,  0, +1 )
+               ( 2, +1, +1 ) |]
 
     let floydSteinberg =
-        createFilter
-            [| { X = +1; Y =  0; Coefficient = 7; Divisor = 16 }
-               { X = -1; Y = +1; Coefficient = 3; Divisor = 16 }
-               { X =  0; Y = +1; Coefficient = 5; Divisor = 16 }
-               { X = +1; Y = +1; Coefficient = 1; Divisor = 16 } |]
+        createFilter 16
+            [| ( 7, +1,  0 )
+               ( 3, -1, +1 )
+               ( 5,  0, +1 )
+               ( 1, +1, +1 ) |]
 
     let jarvisJudiceNinke =
-        createFilter
-            [| { X = +1; Y =  0; Coefficient = 7; Divisor = 48 }
-               { X = +2; Y =  0; Coefficient = 5; Divisor = 48 }
-               { X = -2; Y = +1; Coefficient = 3; Divisor = 48 }
-               { X = -1; Y = +1; Coefficient = 5; Divisor = 48 }
-               { X =  0; Y = +1; Coefficient = 7; Divisor = 48 }
-               { X = +1; Y = +1; Coefficient = 5; Divisor = 48 }
-               { X = +2; Y = +1; Coefficient = 3; Divisor = 48 }
-               { X = -2; Y = +2; Coefficient = 1; Divisor = 48 }
-               { X = -1; Y = +2; Coefficient = 3; Divisor = 48 }
-               { X =  0; Y = +2; Coefficient = 5; Divisor = 48 }
-               { X = +1; Y = +2; Coefficient = 3; Divisor = 48 }
-               { X = +2; Y = +2; Coefficient = 1; Divisor = 48 } |]
+        createFilter 48
+            [| ( 7, +1,  0 )
+               ( 5, +2,  0 )
+               ( 3, -2, +1 )
+               ( 5, -1, +1 )
+               ( 7,  0, +1 )
+               ( 5, +1, +1 )
+               ( 3, +2, +1 )
+               ( 1, -2, +2 )
+               ( 3, -1, +2 )
+               ( 5,  0, +2 )
+               ( 3, +1, +2 )
+               ( 1, +2, +2 ) |]
 
     let stucki =
-        createFilter
-            [| { X = +1; Y =  0; Coefficient = 8; Divisor = 42 }
-               { X = +2; Y =  0; Coefficient = 4; Divisor = 42 }
-               { X = -2; Y = +1; Coefficient = 2; Divisor = 42 }
-               { X = -1; Y = +1; Coefficient = 4; Divisor = 42 }
-               { X =  0; Y = +1; Coefficient = 8; Divisor = 42 }
-               { X = +1; Y = +1; Coefficient = 4; Divisor = 42 }
-               { X = +2; Y = +1; Coefficient = 2; Divisor = 42 }
-               { X = -2; Y = +2; Coefficient = 1; Divisor = 42 }
-               { X = -1; Y = +2; Coefficient = 2; Divisor = 42 }
-               { X =  0; Y = +2; Coefficient = 4; Divisor = 42 }
-               { X = +1; Y = +2; Coefficient = 2; Divisor = 42 }
-               { X = +2; Y = +2; Coefficient = 1; Divisor = 42 } |]
+        createFilter 42
+            [| ( 8, +1,  0 )
+               ( 4, +2,  0 )
+               ( 2, -2, +1 )
+               ( 4, -1, +1 )
+               ( 8,  0, +1 )
+               ( 4, +1, +1 )
+               ( 2, +2, +1 )
+               ( 1, -2, +2 )
+               ( 2, -1, +2 )
+               ( 4,  0, +2 )
+               ( 2, +1, +2 )
+               ( 1, +2, +2 ) |]
 
     let burkes =
-        createFilter
-            [| { X = +1; Y =  0; Coefficient = 8; Divisor = 32 }
-               { X = +2; Y =  0; Coefficient = 4; Divisor = 32 }
-               { X = -2; Y = +1; Coefficient = 2; Divisor = 32 }
-               { X = -1; Y = +1; Coefficient = 4; Divisor = 32 }
-               { X =  0; Y = +1; Coefficient = 8; Divisor = 32 }
-               { X = +1; Y = +1; Coefficient = 4; Divisor = 32 }
-               { X = +2; Y = +1; Coefficient = 2; Divisor = 32 } |]
+        createFilter 32
+            [| ( 8, +1,  0 )
+               ( 4, +2,  0 )
+               ( 2, -2, +1 )
+               ( 4, -1, +1 )
+               ( 8,  0, +1 )
+               ( 4, +1, +1 )
+               ( 2, +2, +1 ) |]
 
     let sierra3Row =
-        createFilter
-            [| { X = +1; Y =  0; Coefficient = 5; Divisor = 32 }
-               { X = +2; Y =  0; Coefficient = 3; Divisor = 32 }
-               { X = -2; Y = +1; Coefficient = 2; Divisor = 32 }
-               { X = -1; Y = +1; Coefficient = 4; Divisor = 32 }
-               { X =  0; Y = +1; Coefficient = 5; Divisor = 32 }
-               { X = +1; Y = +1; Coefficient = 4; Divisor = 32 }
-               { X = +2; Y = +1; Coefficient = 2; Divisor = 32 }
-               { X = -1; Y = +2; Coefficient = 2; Divisor = 32 }
-               { X =  0; Y = +2; Coefficient = 3; Divisor = 32 }
-               { X = +1; Y = +2; Coefficient = 2; Divisor = 32 } |]
+        createFilter 32
+            [| ( 5, +1,  0 )
+               ( 3, +2,  0 )
+               ( 2, -2, +1 )
+               ( 4, -1, +1 )
+               ( 5,  0, +1 )
+               ( 4, +1, +1 )
+               ( 2, +2, +1 )
+               ( 2, -1, +2 )
+               ( 3,  0, +2 )
+               ( 2, +1, +2 ) |]
 
     let sierra2Row =
-        createFilter
-            [| { X = +1; Y =  0; Coefficient = 4; Divisor = 16 }
-               { X = +2; Y =  0; Coefficient = 3; Divisor = 16 }
-               { X = -2; Y = +1; Coefficient = 1; Divisor = 16 }
-               { X = -1; Y = +1; Coefficient = 2; Divisor = 16 }
-               { X =  0; Y = +1; Coefficient = 3; Divisor = 16 }
-               { X = +1; Y = +1; Coefficient = 2; Divisor = 16 }
-               { X = +2; Y = +1; Coefficient = 1; Divisor = 16 } |]
+        createFilter 16
+            [| ( 4, +1,  0 )
+               ( 3, +2,  0 )
+               ( 1, -2, +1 )
+               ( 2, -1, +1 )
+               ( 3,  0, +1 )
+               ( 2, +1, +1 )
+               ( 1, +2, +1 ) |]
 
     let sierraLite =
-        createFilter
-            [| { X = +1; Y =  0; Coefficient = 2; Divisor =  4 }
-               { X = -1; Y = +1; Coefficient = 1; Divisor =  4 }
-               { X =  0; Y = +1; Coefficient = 1; Divisor =  4 } |]
+        createFilter 04
+            [| ( 2, +1,  0 )
+               ( 1, -1, +1 )
+               ( 1,  0, +1 ) |]
 
     let atkinson =
-        createFilter
-            [| { X = +1; Y =  0; Coefficient = 1; Divisor =  8 }
-               { X = +2; Y =  0; Coefficient = 1; Divisor =  8 }
-               { X = -1; Y = +1; Coefficient = 1; Divisor =  8 }
-               { X =  0; Y = +1; Coefficient = 1; Divisor =  8 }
-               { X = +1; Y = +1; Coefficient = 1; Divisor =  8 }
-               { X =  0; Y = +2; Coefficient = 1; Divisor =  8 } |]
+        createFilter 08
+            [| ( 1, +1,  0 )
+               ( 1, +2,  0 )
+               ( 1, -1, +1 )
+               ( 1,  0, +1 )
+               ( 1, +1, +1 )
+               ( 1,  0, +2 ) |]
 
     let zhigangFan =
-        createFilter
-            [| { X = +1; Y =  0; Coefficient = 7; Divisor = 16 }
-               { X = -1; Y = +1; Coefficient = 1; Divisor = 16 }
-               { X =  0; Y = +1; Coefficient = 3; Divisor = 16 }
-               { X = +1; Y = +1; Coefficient = 5; Divisor = 16 } |]
+        createFilter 16
+            [| ( 7, +1,  0 )
+               ( 1, -1, +1 )
+               ( 3,  0, +1 )
+               ( 5, +1, +1 ) |]
 
     let shiauFan1 =
-        createFilter
-            [| { X = +1; Y =  0; Coefficient = 4; Divisor =  8 }
-               { X = -2; Y = +1; Coefficient = 1; Divisor =  8 }
-               { X = -1; Y = +1; Coefficient = 1; Divisor =  8 }
-               { X =  0; Y = +1; Coefficient = 2; Divisor =  8 } |]
+        createFilter 08
+            [| ( 4, +1,  0 )
+               ( 1, -2, +1 )
+               ( 1, -1, +1 )
+               ( 2,  0, +1 ) |]
 
     let shiauFan2 =
-        createFilter
-            [| { X = +1; Y =  0; Coefficient = 8; Divisor = 16 }
-               { X = -3; Y = +1; Coefficient = 1; Divisor = 16 }
-               { X = -2; Y = +1; Coefficient = 1; Divisor = 16 }
-               { X = -1; Y = +1; Coefficient = 2; Divisor = 16 }
-               { X =  0; Y = +1; Coefficient = 4; Divisor = 16 } |]
+        createFilter 16
+            [| ( 8, +1,  0 )
+               ( 1, -3, +1 )
+               ( 1, -2, +1 )
+               ( 2, -1, +1 )
+               ( 4,  0, +1 ) |]
 
 //-------------------------------------------------------------------------------------------------
 
@@ -249,11 +247,12 @@ let private ditherErrorDiffusion filter image =
         pixels.[x, y] <- pixel
 
     let writeError error x y =
-        for element in (filter : ErrorDiffusionElement[]) do
-            let x = x + element.X
-            let y = y + element.Y
+        let coefficients, divisor = filter : (int * int * int)[] * int
+        for coefficient, x', y' in coefficients do
+            let x = x + x'
+            let y = y + y'
             if (0 <= x && x < w) && (0 <= y && y < h) then
-                let error = (int error * element.Coefficient) / element.Divisor
+                let error = (int error * coefficient) / divisor
                 errors.[x, y] <- errors.[x, y] + sbyte error
 
     for y = 0 to h - 1 do
