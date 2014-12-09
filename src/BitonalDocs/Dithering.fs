@@ -14,21 +14,20 @@ type Color =
 type ErrorDiffusionElement = { X : int; Y : int; Coefficient : int; Divisor : int }
 
 type DitheringType =
-    | ThresholdFixed of byte
-    | ThresholdOrdered of byte[,]
+    | Threshold' of byte[,]
     | ErrorDiffusion' of ErrorDiffusionElement[]
 
 //-------------------------------------------------------------------------------------------------
 
 module Threshold =
 
-    let fixed' level = ThresholdFixed level
+    let fixed' level = Threshold' (array2D [[ level ]])
 
     let createMatrix levels thresholds =
         let array = array2D thresholds
         let mapping i = byte (((1 + i) * 256) / (1 + levels))
         let matrix = Array2D.map mapping array
-        ThresholdOrdered matrix
+        Threshold' matrix
 
     let dispersed8x8 =
         createMatrix (8 * 8)
@@ -89,8 +88,7 @@ module Threshold =
 
 module ErrorDiffusion =
 
-    let createFilter elements =
-        ErrorDiffusion' elements
+    let createFilter elements = ErrorDiffusion' elements
 
     let basic =
         createFilter
@@ -220,7 +218,7 @@ let private computeBrightness (image : Color[,]) x y =
     let brightness = (r + g + b) / 10000
     byte brightness
 
-let private threshold matrix image =
+let private ditherThreshold matrix image =
 
     let computeThreshold matrix image x y =
         let m = Array2D.length1 matrix
@@ -233,7 +231,7 @@ let private threshold matrix image =
     let h = Array2D.length2 image
     Array2D.init w h (computeThreshold matrix image)
 
-let private errorDiffusion filter image =
+let private ditherErrorDiffusion filter image =
 
     let w = Array2D.length1 image
     let h = Array2D.length2 image
@@ -266,19 +264,10 @@ let private errorDiffusion filter image =
 
     pixels
 
-let dither pattern image =
-
-    let rec computeDither = function
-        | ThresholdFixed(value)
-            -> [[ value ]]
-            |> array2D
-            |> ThresholdOrdered
-            |> computeDither
-        | ThresholdOrdered(matrix)
-            -> matrix
-            |> threshold
-        | ErrorDiffusion'(filter)
-            -> filter
-            |> errorDiffusion
-
-    computeDither pattern image
+let dither = function
+    | Threshold'(matrix)
+        -> matrix
+        |> ditherThreshold
+    | ErrorDiffusion'(filter)
+        -> filter
+        |> ditherErrorDiffusion
