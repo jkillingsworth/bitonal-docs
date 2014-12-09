@@ -68,7 +68,7 @@ let createTiffImage w h resolution render =
 
     bitmap
     |> convertImageToColorArray
-    |> Dithering.threshold (Dithering.Fixed 127uy)
+    |> Dithering.dither (Dithering.Threshold.fixed' 127uy)
     |> convertTo1Bpp
     |> Tiff.createImageFile (uint32 w) (uint32 h) (uint32 resolution)
     |> Tiff.serializeImageFile

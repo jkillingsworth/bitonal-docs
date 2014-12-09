@@ -11,20 +11,24 @@ type Color =
 
     new (r, g, b) = { R = r; G = g; B = b }
 
-type ThresholdType =
-    | Fixed of byte
-    | Ordered of byte[,]
+type ErrorDiffusionElement = { X : int; Y : int; Coefficient : int; Divisor : int }
+
+type DitheringType =
+    | ThresholdFixed of byte
+    | ThresholdOrdered of byte[,]
+    | ErrorDiffusion' of ErrorDiffusionElement[]
 
 //-------------------------------------------------------------------------------------------------
 
-module Matrix =
+module Threshold =
+
+    let fixed' level = ThresholdFixed level
 
     let createMatrix levels thresholds =
-
         let array = array2D thresholds
         let mapping i = byte (((1 + i) * 256) / (1 + levels))
         let matrix = Array2D.map mapping array
-        Ordered matrix
+        ThresholdOrdered matrix
 
     let dispersed8x8 =
         createMatrix (8 * 8)
@@ -83,113 +87,127 @@ module Matrix =
 
 //-------------------------------------------------------------------------------------------------
 
-module Filter =
+module ErrorDiffusion =
 
-    type Element = { X : int; Y : int; Coefficient : int; Divisor : int }
+    let createFilter elements =
+        ErrorDiffusion' elements
 
     let basic =
-        [| { X = +1; Y =  0; Coefficient = 1; Divisor =  1 } |]
+        createFilter
+            [| { X = +1; Y =  0; Coefficient = 1; Divisor =  1 } |]
 
     let falseFloydSteinberg =
-        [| { X = +1; Y =  0; Coefficient = 3; Divisor =  8 }
-           { X =  0; Y = +1; Coefficient = 3; Divisor =  8 }
-           { X = +1; Y = +1; Coefficient = 2; Divisor =  8 } |]
+        createFilter
+            [| { X = +1; Y =  0; Coefficient = 3; Divisor =  8 }
+               { X =  0; Y = +1; Coefficient = 3; Divisor =  8 }
+               { X = +1; Y = +1; Coefficient = 2; Divisor =  8 } |]
 
     let floydSteinberg =
-        [| { X = +1; Y =  0; Coefficient = 7; Divisor = 16 }
-           { X = -1; Y = +1; Coefficient = 3; Divisor = 16 }
-           { X =  0; Y = +1; Coefficient = 5; Divisor = 16 }
-           { X = +1; Y = +1; Coefficient = 1; Divisor = 16 } |]
+        createFilter
+            [| { X = +1; Y =  0; Coefficient = 7; Divisor = 16 }
+               { X = -1; Y = +1; Coefficient = 3; Divisor = 16 }
+               { X =  0; Y = +1; Coefficient = 5; Divisor = 16 }
+               { X = +1; Y = +1; Coefficient = 1; Divisor = 16 } |]
 
     let jarvisJudiceNinke =
-        [| { X = +1; Y =  0; Coefficient = 7; Divisor = 48 }
-           { X = +2; Y =  0; Coefficient = 5; Divisor = 48 }
-           { X = -2; Y = +1; Coefficient = 3; Divisor = 48 }
-           { X = -1; Y = +1; Coefficient = 5; Divisor = 48 }
-           { X =  0; Y = +1; Coefficient = 7; Divisor = 48 }
-           { X = +1; Y = +1; Coefficient = 5; Divisor = 48 }
-           { X = +2; Y = +1; Coefficient = 3; Divisor = 48 }
-           { X = -2; Y = +2; Coefficient = 1; Divisor = 48 }
-           { X = -1; Y = +2; Coefficient = 3; Divisor = 48 }
-           { X =  0; Y = +2; Coefficient = 5; Divisor = 48 }
-           { X = +1; Y = +2; Coefficient = 3; Divisor = 48 }
-           { X = +2; Y = +2; Coefficient = 1; Divisor = 48 } |]
+        createFilter
+            [| { X = +1; Y =  0; Coefficient = 7; Divisor = 48 }
+               { X = +2; Y =  0; Coefficient = 5; Divisor = 48 }
+               { X = -2; Y = +1; Coefficient = 3; Divisor = 48 }
+               { X = -1; Y = +1; Coefficient = 5; Divisor = 48 }
+               { X =  0; Y = +1; Coefficient = 7; Divisor = 48 }
+               { X = +1; Y = +1; Coefficient = 5; Divisor = 48 }
+               { X = +2; Y = +1; Coefficient = 3; Divisor = 48 }
+               { X = -2; Y = +2; Coefficient = 1; Divisor = 48 }
+               { X = -1; Y = +2; Coefficient = 3; Divisor = 48 }
+               { X =  0; Y = +2; Coefficient = 5; Divisor = 48 }
+               { X = +1; Y = +2; Coefficient = 3; Divisor = 48 }
+               { X = +2; Y = +2; Coefficient = 1; Divisor = 48 } |]
 
     let stucki =
-        [| { X = +1; Y =  0; Coefficient = 8; Divisor = 42 }
-           { X = +2; Y =  0; Coefficient = 4; Divisor = 42 }
-           { X = -2; Y = +1; Coefficient = 2; Divisor = 42 }
-           { X = -1; Y = +1; Coefficient = 4; Divisor = 42 }
-           { X =  0; Y = +1; Coefficient = 8; Divisor = 42 }
-           { X = +1; Y = +1; Coefficient = 4; Divisor = 42 }
-           { X = +2; Y = +1; Coefficient = 2; Divisor = 42 }
-           { X = -2; Y = +2; Coefficient = 1; Divisor = 42 }
-           { X = -1; Y = +2; Coefficient = 2; Divisor = 42 }
-           { X =  0; Y = +2; Coefficient = 4; Divisor = 42 }
-           { X = +1; Y = +2; Coefficient = 2; Divisor = 42 }
-           { X = +2; Y = +2; Coefficient = 1; Divisor = 42 } |]
+        createFilter
+            [| { X = +1; Y =  0; Coefficient = 8; Divisor = 42 }
+               { X = +2; Y =  0; Coefficient = 4; Divisor = 42 }
+               { X = -2; Y = +1; Coefficient = 2; Divisor = 42 }
+               { X = -1; Y = +1; Coefficient = 4; Divisor = 42 }
+               { X =  0; Y = +1; Coefficient = 8; Divisor = 42 }
+               { X = +1; Y = +1; Coefficient = 4; Divisor = 42 }
+               { X = +2; Y = +1; Coefficient = 2; Divisor = 42 }
+               { X = -2; Y = +2; Coefficient = 1; Divisor = 42 }
+               { X = -1; Y = +2; Coefficient = 2; Divisor = 42 }
+               { X =  0; Y = +2; Coefficient = 4; Divisor = 42 }
+               { X = +1; Y = +2; Coefficient = 2; Divisor = 42 }
+               { X = +2; Y = +2; Coefficient = 1; Divisor = 42 } |]
 
     let burkes =
-        [| { X = +1; Y =  0; Coefficient = 8; Divisor = 32 }
-           { X = +2; Y =  0; Coefficient = 4; Divisor = 32 }
-           { X = -2; Y = +1; Coefficient = 2; Divisor = 32 }
-           { X = -1; Y = +1; Coefficient = 4; Divisor = 32 }
-           { X =  0; Y = +1; Coefficient = 8; Divisor = 32 }
-           { X = +1; Y = +1; Coefficient = 4; Divisor = 32 }
-           { X = +2; Y = +1; Coefficient = 2; Divisor = 32 } |]
+        createFilter
+            [| { X = +1; Y =  0; Coefficient = 8; Divisor = 32 }
+               { X = +2; Y =  0; Coefficient = 4; Divisor = 32 }
+               { X = -2; Y = +1; Coefficient = 2; Divisor = 32 }
+               { X = -1; Y = +1; Coefficient = 4; Divisor = 32 }
+               { X =  0; Y = +1; Coefficient = 8; Divisor = 32 }
+               { X = +1; Y = +1; Coefficient = 4; Divisor = 32 }
+               { X = +2; Y = +1; Coefficient = 2; Divisor = 32 } |]
 
     let sierra3Row =
-        [| { X = +1; Y =  0; Coefficient = 5; Divisor = 32 }
-           { X = +2; Y =  0; Coefficient = 3; Divisor = 32 }
-           { X = -2; Y = +1; Coefficient = 2; Divisor = 32 }
-           { X = -1; Y = +1; Coefficient = 4; Divisor = 32 }
-           { X =  0; Y = +1; Coefficient = 5; Divisor = 32 }
-           { X = +1; Y = +1; Coefficient = 4; Divisor = 32 }
-           { X = +2; Y = +1; Coefficient = 2; Divisor = 32 }
-           { X = -1; Y = +2; Coefficient = 2; Divisor = 32 }
-           { X =  0; Y = +2; Coefficient = 3; Divisor = 32 }
-           { X = +1; Y = +2; Coefficient = 2; Divisor = 32 } |]
+        createFilter
+            [| { X = +1; Y =  0; Coefficient = 5; Divisor = 32 }
+               { X = +2; Y =  0; Coefficient = 3; Divisor = 32 }
+               { X = -2; Y = +1; Coefficient = 2; Divisor = 32 }
+               { X = -1; Y = +1; Coefficient = 4; Divisor = 32 }
+               { X =  0; Y = +1; Coefficient = 5; Divisor = 32 }
+               { X = +1; Y = +1; Coefficient = 4; Divisor = 32 }
+               { X = +2; Y = +1; Coefficient = 2; Divisor = 32 }
+               { X = -1; Y = +2; Coefficient = 2; Divisor = 32 }
+               { X =  0; Y = +2; Coefficient = 3; Divisor = 32 }
+               { X = +1; Y = +2; Coefficient = 2; Divisor = 32 } |]
 
     let sierra2Row =
-        [| { X = +1; Y =  0; Coefficient = 4; Divisor = 16 }
-           { X = +2; Y =  0; Coefficient = 3; Divisor = 16 }
-           { X = -2; Y = +1; Coefficient = 1; Divisor = 16 }
-           { X = -1; Y = +1; Coefficient = 2; Divisor = 16 }
-           { X =  0; Y = +1; Coefficient = 3; Divisor = 16 }
-           { X = +1; Y = +1; Coefficient = 2; Divisor = 16 }
-           { X = +2; Y = +1; Coefficient = 1; Divisor = 16 } |]
+        createFilter
+            [| { X = +1; Y =  0; Coefficient = 4; Divisor = 16 }
+               { X = +2; Y =  0; Coefficient = 3; Divisor = 16 }
+               { X = -2; Y = +1; Coefficient = 1; Divisor = 16 }
+               { X = -1; Y = +1; Coefficient = 2; Divisor = 16 }
+               { X =  0; Y = +1; Coefficient = 3; Divisor = 16 }
+               { X = +1; Y = +1; Coefficient = 2; Divisor = 16 }
+               { X = +2; Y = +1; Coefficient = 1; Divisor = 16 } |]
 
     let sierraLite =
-        [| { X = +1; Y =  0; Coefficient = 2; Divisor =  4 }
-           { X = -1; Y = +1; Coefficient = 1; Divisor =  4 }
-           { X =  0; Y = +1; Coefficient = 1; Divisor =  4 } |]
+        createFilter
+            [| { X = +1; Y =  0; Coefficient = 2; Divisor =  4 }
+               { X = -1; Y = +1; Coefficient = 1; Divisor =  4 }
+               { X =  0; Y = +1; Coefficient = 1; Divisor =  4 } |]
 
     let atkinson =
-        [| { X = +1; Y =  0; Coefficient = 1; Divisor =  8 }
-           { X = +2; Y =  0; Coefficient = 1; Divisor =  8 }
-           { X = -1; Y = +1; Coefficient = 1; Divisor =  8 }
-           { X =  0; Y = +1; Coefficient = 1; Divisor =  8 }
-           { X = +1; Y = +1; Coefficient = 1; Divisor =  8 }
-           { X =  0; Y = +2; Coefficient = 1; Divisor =  8 } |]
+        createFilter
+            [| { X = +1; Y =  0; Coefficient = 1; Divisor =  8 }
+               { X = +2; Y =  0; Coefficient = 1; Divisor =  8 }
+               { X = -1; Y = +1; Coefficient = 1; Divisor =  8 }
+               { X =  0; Y = +1; Coefficient = 1; Divisor =  8 }
+               { X = +1; Y = +1; Coefficient = 1; Divisor =  8 }
+               { X =  0; Y = +2; Coefficient = 1; Divisor =  8 } |]
 
     let zhigangFan =
-        [| { X = +1; Y =  0; Coefficient = 7; Divisor = 16 }
-           { X = -1; Y = +1; Coefficient = 1; Divisor = 16 }
-           { X =  0; Y = +1; Coefficient = 3; Divisor = 16 }
-           { X = +1; Y = +1; Coefficient = 5; Divisor = 16 } |]
+        createFilter
+            [| { X = +1; Y =  0; Coefficient = 7; Divisor = 16 }
+               { X = -1; Y = +1; Coefficient = 1; Divisor = 16 }
+               { X =  0; Y = +1; Coefficient = 3; Divisor = 16 }
+               { X = +1; Y = +1; Coefficient = 5; Divisor = 16 } |]
 
     let shiauFan1 =
-        [| { X = +1; Y =  0; Coefficient = 4; Divisor =  8 }
-           { X = -2; Y = +1; Coefficient = 1; Divisor =  8 }
-           { X = -1; Y = +1; Coefficient = 1; Divisor =  8 }
-           { X =  0; Y = +1; Coefficient = 2; Divisor =  8 } |]
+        createFilter
+            [| { X = +1; Y =  0; Coefficient = 4; Divisor =  8 }
+               { X = -2; Y = +1; Coefficient = 1; Divisor =  8 }
+               { X = -1; Y = +1; Coefficient = 1; Divisor =  8 }
+               { X =  0; Y = +1; Coefficient = 2; Divisor =  8 } |]
 
     let shiauFan2 =
-        [| { X = +1; Y =  0; Coefficient = 8; Divisor = 16 }
-           { X = -3; Y = +1; Coefficient = 1; Divisor = 16 }
-           { X = -2; Y = +1; Coefficient = 1; Divisor = 16 }
-           { X = -1; Y = +1; Coefficient = 2; Divisor = 16 }
-           { X =  0; Y = +1; Coefficient = 4; Divisor = 16 } |]
+        createFilter
+            [| { X = +1; Y =  0; Coefficient = 8; Divisor = 16 }
+               { X = -3; Y = +1; Coefficient = 1; Divisor = 16 }
+               { X = -2; Y = +1; Coefficient = 1; Divisor = 16 }
+               { X = -1; Y = +1; Coefficient = 2; Divisor = 16 }
+               { X =  0; Y = +1; Coefficient = 4; Divisor = 16 } |]
 
 //-------------------------------------------------------------------------------------------------
 
@@ -202,7 +220,7 @@ let private computeBrightness (image : Color[,]) x y =
     let brightness = (r + g + b) / 10000
     byte brightness
 
-let threshold pattern image =
+let private threshold matrix image =
 
     let computeThreshold matrix image x y =
         let m = Array2D.length1 matrix
@@ -211,15 +229,11 @@ let threshold pattern image =
         let threshold = matrix.[x % m, y % n]
         brightness > threshold
 
-    let rec initialize = function
-        | Fixed(value) -> initialize (Ordered (array2D [[ value ]]))
-        | Ordered(matrix) -> computeThreshold matrix
-
     let w = Array2D.length1 image
     let h = Array2D.length2 image
-    Array2D.init w h (initialize pattern image)
+    Array2D.init w h (computeThreshold matrix image)
 
-let errorDiffusion filter image =
+let private errorDiffusion filter image =
 
     let w = Array2D.length1 image
     let h = Array2D.length2 image
@@ -237,7 +251,7 @@ let errorDiffusion filter image =
         pixels.[x, y] <- pixel
 
     let writeError error x y =
-        for (element : Filter.Element) in filter do
+        for element in (filter : ErrorDiffusionElement[]) do
             let x = x + element.X
             let y = y + element.Y
             if (0 <= x && x < w) && (0 <= y && y < h) then
@@ -251,3 +265,20 @@ let errorDiffusion filter image =
             writeError error x y
 
     pixels
+
+let dither pattern image =
+
+    let rec computeDither = function
+        | ThresholdFixed(value)
+            -> [[ value ]]
+            |> array2D
+            |> ThresholdOrdered
+            |> computeDither
+        | ThresholdOrdered(matrix)
+            -> matrix
+            |> threshold
+        | ErrorDiffusion'(filter)
+            -> filter
+            |> errorDiffusion
+
+    computeDither pattern image
