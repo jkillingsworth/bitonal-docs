@@ -9,6 +9,10 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Example1", "src\Example1\Ex
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Example2", "src\Example2\Example2.fsproj", "{E54C61A2-CBE6-4D8C-8E7C-CA381151C0FE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{7B2535B4-C4F1-4A75-ADBC-31F16C674E86}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BitonalDocs.Tests", "tests\BitonalDocs.Tests\BitonalDocs.Tests.fsproj", "{3B710EB9-14DC-4B4E-9D8E-E8E5B0F70465}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,8 +31,15 @@ Global
 		{E54C61A2-CBE6-4D8C-8E7C-CA381151C0FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E54C61A2-CBE6-4D8C-8E7C-CA381151C0FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E54C61A2-CBE6-4D8C-8E7C-CA381151C0FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B710EB9-14DC-4B4E-9D8E-E8E5B0F70465}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B710EB9-14DC-4B4E-9D8E-E8E5B0F70465}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B710EB9-14DC-4B4E-9D8E-E8E5B0F70465}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B710EB9-14DC-4B4E-9D8E-E8E5B0F70465}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3B710EB9-14DC-4B4E-9D8E-E8E5B0F70465} = {7B2535B4-C4F1-4A75-ADBC-31F16C674E86}
 	EndGlobalSection
 EndGlobal
