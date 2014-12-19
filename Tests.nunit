@@ -1,9 +1,9 @@
 ﻿<NUnitProject>
   <Settings activeconfig="Debug" />
-  <Config name="Debug" binpathtype="Auto">
+  <Config name="Debug" configfile="build\bin\AnyCPU\Debug\BitonalDocs.Tests.dll.config" binpathtype="Auto">
     <assembly path="build\bin\AnyCPU\Debug\BitonalDocs.Tests.dll" />
   </Config>
-  <Config name="Release" binpathtype="Auto">
+  <Config name="Release" configfile="build\bin\AnyCPU\Release\BitonalDocs.Tests.dll.config" binpathtype="Auto">
     <assembly path="build\bin\AnyCPU\Release\BitonalDocs.Tests.dll" />
   </Config>
 </NUnitProject>
