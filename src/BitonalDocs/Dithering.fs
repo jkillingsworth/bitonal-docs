@@ -51,7 +51,7 @@ module Threshold =
               [ 02; 01 ] ]
 
     let clustered8x8 =
-        createMatrix (8 * 4)
+        createMatrix (4 * 8)
             [ [ 12; 05; 06; 13; 19; 26; 25; 18 ]
               [ 04; 00; 01; 07; 27; 31; 30; 24 ]
               [ 11; 03; 02; 08; 20; 28; 29; 23 ]
@@ -62,7 +62,7 @@ module Threshold =
               [ 16; 21; 22; 17; 15; 10; 09; 14 ] ]
 
     let clustered6x6 =
-        createMatrix (6 * 3)
+        createMatrix (3 * 6)
             [ [ 08; 04; 05; 09; 13; 12 ]
               [ 03; 00; 01; 14; 17; 16 ]
               [ 07; 02; 06; 10; 15; 11 ]
@@ -71,14 +71,14 @@ module Threshold =
               [ 10; 15; 11; 07; 02; 06 ] ]
 
     let clustered4x4 =
-        createMatrix (4 * 2)
+        createMatrix (2 * 4)
             [ [ 00; 01; 07; 06 ]
               [ 03; 02; 04; 05 ]
               [ 07; 06; 00; 01 ]
               [ 04; 05; 03; 02 ] ]
 
     let clustered2x2 =
-        createMatrix (2 * 1)
+        createMatrix (1 * 2)
             [ [ 00; 01 ]
               [ 01; 00 ] ]
 
@@ -90,126 +90,126 @@ module ErrorDiffusion =
 
     let basic =
         createFilter 01
-            [| ( 1, +1,  0 ) |]
+            [| ( 1,  0, +1 ) |]
 
     let falseFloydSteinberg =
         createFilter 08
-            [| ( 3, +1,  0 )
-               ( 3,  0, +1 )
+            [| ( 3,  0, +1 )
+               ( 3, +1,  0 )
                ( 2, +1, +1 ) |]
 
     let floydSteinberg =
         createFilter 16
-            [| ( 7, +1,  0 )
-               ( 3, -1, +1 )
-               ( 5,  0, +1 )
+            [| ( 7,  0, +1 )
+               ( 3, +1, -1 )
+               ( 5, +1,  0 )
                ( 1, +1, +1 ) |]
 
     let jarvisJudiceNinke =
         createFilter 48
-            [| ( 7, +1,  0 )
-               ( 5, +2,  0 )
-               ( 3, -2, +1 )
-               ( 5, -1, +1 )
-               ( 7,  0, +1 )
-               ( 5, +1, +1 )
-               ( 3, +2, +1 )
-               ( 1, -2, +2 )
-               ( 3, -1, +2 )
+            [| ( 7,  0, +1 )
                ( 5,  0, +2 )
+               ( 3, +1, -2 )
+               ( 5, +1, -1 )
+               ( 7, +1,  0 )
+               ( 5, +1, +1 )
                ( 3, +1, +2 )
+               ( 1, +2, -2 )
+               ( 3, +2, -1 )
+               ( 5, +2,  0 )
+               ( 3, +2, +1 )
                ( 1, +2, +2 ) |]
 
     let stucki =
         createFilter 42
-            [| ( 8, +1,  0 )
-               ( 4, +2,  0 )
-               ( 2, -2, +1 )
-               ( 4, -1, +1 )
-               ( 8,  0, +1 )
-               ( 4, +1, +1 )
-               ( 2, +2, +1 )
-               ( 1, -2, +2 )
-               ( 2, -1, +2 )
+            [| ( 8,  0, +1 )
                ( 4,  0, +2 )
+               ( 2, +1, -2 )
+               ( 4, +1, -1 )
+               ( 8, +1,  0 )
+               ( 4, +1, +1 )
                ( 2, +1, +2 )
+               ( 1, +2, -2 )
+               ( 2, +2, -1 )
+               ( 4, +2,  0 )
+               ( 2, +2, +1 )
                ( 1, +2, +2 ) |]
 
     let burkes =
         createFilter 32
-            [| ( 8, +1,  0 )
-               ( 4, +2,  0 )
-               ( 2, -2, +1 )
-               ( 4, -1, +1 )
-               ( 8,  0, +1 )
+            [| ( 8,  0, +1 )
+               ( 4,  0, +2 )
+               ( 2, +1, -2 )
+               ( 4, +1, -1 )
+               ( 8, +1,  0 )
                ( 4, +1, +1 )
-               ( 2, +2, +1 ) |]
+               ( 2, +1, +2 ) |]
 
     let sierra3Row =
         createFilter 32
-            [| ( 5, +1,  0 )
-               ( 3, +2,  0 )
-               ( 2, -2, +1 )
-               ( 4, -1, +1 )
-               ( 5,  0, +1 )
-               ( 4, +1, +1 )
-               ( 2, +2, +1 )
-               ( 2, -1, +2 )
+            [| ( 5,  0, +1 )
                ( 3,  0, +2 )
-               ( 2, +1, +2 ) |]
+               ( 2, +1, -2 )
+               ( 4, +1, -1 )
+               ( 5, +1,  0 )
+               ( 4, +1, +1 )
+               ( 2, +1, +2 )
+               ( 2, +2, -1 )
+               ( 3, +2,  0 )
+               ( 2, +2, +1 ) |]
 
     let sierra2Row =
         createFilter 16
-            [| ( 4, +1,  0 )
-               ( 3, +2,  0 )
-               ( 1, -2, +1 )
-               ( 2, -1, +1 )
-               ( 3,  0, +1 )
+            [| ( 4,  0, +1 )
+               ( 3,  0, +2 )
+               ( 1, +1, -2 )
+               ( 2, +1, -1 )
+               ( 3, +1,  0 )
                ( 2, +1, +1 )
-               ( 1, +2, +1 ) |]
+               ( 1, +1, +2 ) |]
 
     let sierraLite =
         createFilter 04
-            [| ( 2, +1,  0 )
-               ( 1, -1, +1 )
-               ( 1,  0, +1 ) |]
+            [| ( 2,  0, +1 )
+               ( 1, +1, -1 )
+               ( 1, +1,  0 ) |]
 
     let atkinson =
         createFilter 08
-            [| ( 1, +1,  0 )
-               ( 1, +2,  0 )
-               ( 1, -1, +1 )
-               ( 1,  0, +1 )
+            [| ( 1,  0, +1 )
+               ( 1,  0, +2 )
+               ( 1, +1, -1 )
+               ( 1, +1,  0 )
                ( 1, +1, +1 )
-               ( 1,  0, +2 ) |]
+               ( 1, +2,  0 ) |]
 
     let zhigangFan =
         createFilter 16
-            [| ( 7, +1,  0 )
-               ( 1, -1, +1 )
-               ( 3,  0, +1 )
+            [| ( 7,  0, +1 )
+               ( 1, +1, -1 )
+               ( 3, +1,  0 )
                ( 5, +1, +1 ) |]
 
     let shiauFan1 =
         createFilter 08
-            [| ( 4, +1,  0 )
-               ( 1, -2, +1 )
-               ( 1, -1, +1 )
-               ( 2,  0, +1 ) |]
+            [| ( 4,  0, +1 )
+               ( 1, +1, -2 )
+               ( 1, +1, -1 )
+               ( 2, +1,  0 ) |]
 
     let shiauFan2 =
         createFilter 16
-            [| ( 8, +1,  0 )
-               ( 1, -3, +1 )
-               ( 1, -2, +1 )
-               ( 2, -1, +1 )
-               ( 4,  0, +1 ) |]
+            [| ( 8,  0, +1 )
+               ( 1, +1, -3 )
+               ( 1, +1, -2 )
+               ( 2, +1, -1 )
+               ( 4, +1,  0 ) |]
 
 //-------------------------------------------------------------------------------------------------
 
-let private computeBrightness (image : Color[,]) x y =
+let private computeBrightness (image : Color[,]) row col =
 
-    let color = image.[x, y]
+    let color = image.[row, col]
     let r = int color.R * 2126
     let g = int color.G * 7152
     let b = int color.B * 0722
@@ -218,48 +218,48 @@ let private computeBrightness (image : Color[,]) x y =
 
 let private ditherThreshold matrix image =
 
-    let computeThreshold matrix image x y =
+    let computeThreshold matrix image row col =
         let m = Array2D.length1 matrix
         let n = Array2D.length2 matrix
-        let brightness = computeBrightness image x y
-        let threshold = matrix.[x % m, y % n]
+        let brightness = computeBrightness image row col
+        let threshold = matrix.[row % m, col % n]
         brightness > threshold
 
-    let w = Array2D.length1 image
-    let h = Array2D.length2 image
-    Array2D.init w h (computeThreshold matrix image)
+    let rows = Array2D.length1 image
+    let cols = Array2D.length2 image
+    Array2D.init rows cols (computeThreshold matrix image)
 
 let private ditherErrorDiffusion filter image =
 
-    let w = Array2D.length1 image
-    let h = Array2D.length2 image
-    let pixels = Array2D.zeroCreate<bool> w h
-    let errors = Array2D.zeroCreate<sbyte> w h
+    let rows = Array2D.length1 image
+    let cols = Array2D.length2 image
+    let pixels = Array2D.zeroCreate<bool> rows cols
+    let errors = Array2D.zeroCreate<sbyte> rows cols
 
-    let computePixelAndError x y =
-        let brightness = computeBrightness image x y
-        let value = int brightness + int errors.[x, y]
+    let computePixelAndError row col =
+        let brightness = computeBrightness image row col
+        let value = int brightness + int errors.[row, col]
         let pixel = value > 127
         let error = sbyte (match pixel with true -> (value - 255) | false -> value)
         pixel, error
 
-    let writePixel pixel x y =
-        pixels.[x, y] <- pixel
+    let writePixel pixel row col =
+        pixels.[row, col] <- pixel
 
-    let writeError error x y =
+    let writeError error row col =
         let coefficients, divisor = filter : (int * int * int)[] * int
-        for coefficient, x', y' in coefficients do
-            let x = x + x'
-            let y = y + y'
-            if (0 <= x && x < w) && (0 <= y && y < h) then
+        for coefficient, row', col' in coefficients do
+            let row = row + row'
+            let col = col + col'
+            if (0 <= row && row < rows) && (0 <= col && col < cols) then
                 let error = (int error * coefficient) / divisor
-                errors.[x, y] <- errors.[x, y] + sbyte error
+                errors.[row, col] <- errors.[row, col] + sbyte error
 
-    for y = 0 to h - 1 do
-        for x = 0 to w - 1 do
-            let pixel, error = computePixelAndError x y
-            writePixel pixel x y
-            writeError error x y
+    for row = 0 to rows - 1 do
+        for col = 0 to cols - 1 do
+            let pixel, error = computePixelAndError row col
+            writePixel pixel row col
+            writeError error row col
 
     pixels
 
