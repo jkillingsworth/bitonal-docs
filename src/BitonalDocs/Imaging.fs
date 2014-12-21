@@ -4,6 +4,7 @@ open System
 open System.Drawing
 open System.Drawing.Imaging
 open System.Runtime.InteropServices
+open BitonalDocs.Dithering
 
 //-------------------------------------------------------------------------------------------------
 
@@ -26,11 +27,11 @@ let private convertImageToColorArray (image : Bitmap) =
         let r = bytes.[i + 2]
         let g = bytes.[i + 1]
         let b = bytes.[i + 0]
-        Dithering.Color(r, g, b)
+        Color(r, g, b)
 
     Array2D.init rows cols computeValue
 
-let private convertTo1Bpp (image : bool[,]) =
+let private convertTo1Bpp (image : Pixel[,]) =
 
     let rows = Array2D.length1 image
     let cols = Array2D.length2 image
@@ -41,7 +42,7 @@ let private convertTo1Bpp (image : bool[,]) =
         | bits ->
             let x = (offset % cols) + bits - 1
             let y = (offset / cols)
-            let pixel = match image.[y, x] with true -> 0uy | false -> 1uy
+            let pixel = match image.[y, x] with Black -> 1uy | White -> 0uy
             let value = acc ||| (pixel <<< (8 - bits))
             reduceBits offset value (bits - 1)
 
@@ -68,7 +69,7 @@ let createTiffImage w h resolution render =
 
     bitmap
     |> convertImageToColorArray
-    |> Dithering.dither (Dithering.Threshold.fixed' 127uy)
+    |> dither (Threshold.fixed' 127uy)
     |> convertTo1Bpp
     |> Tiff.createImageFile (uint32 w) (uint32 h) (uint32 resolution)
     |> Tiff.serializeImageFile

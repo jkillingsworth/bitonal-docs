@@ -2,18 +2,20 @@
 
 //-------------------------------------------------------------------------------------------------
 
-type DitheringType =
-    | Threshold' of byte[,]
-    | ErrorDiffusion' of ((int * int * int)[] * int)
-
 [<Struct>]
 type Color =
-
     val R : byte
     val G : byte
     val B : byte
-
     new (r, g, b) = { R = r; G = g; B = b }
+
+type Pixel =
+    | Black
+    | White
+
+type DitheringType =
+    | Threshold' of byte[,]
+    | ErrorDiffusion' of ((int * int * int)[] * int)
 
 //-------------------------------------------------------------------------------------------------
 
@@ -223,7 +225,9 @@ let private ditherThreshold matrix image =
         let n = Array2D.length2 matrix
         let brightness = computeBrightness image row col
         let threshold = matrix.[row % m, col % n]
-        brightness > threshold
+        match brightness > threshold with
+        | false -> Black
+        | true  -> White
 
     let rows = Array2D.length1 image
     let cols = Array2D.length2 image
@@ -233,15 +237,15 @@ let private ditherErrorDiffusion filter image =
 
     let rows = Array2D.length1 image
     let cols = Array2D.length2 image
-    let pixels = Array2D.zeroCreate<bool> rows cols
+    let pixels = Array2D.zeroCreate<Pixel> rows cols
     let errors = Array2D.zeroCreate<sbyte> rows cols
 
     let computePixelAndError row col =
         let brightness = computeBrightness image row col
         let value = int brightness + int errors.[row, col]
-        let pixel = value > 127
-        let error = sbyte (match pixel with true -> (value - 255) | false -> value)
-        pixel, error
+        match value > 127 with
+        | false -> Black, sbyte (value)
+        | true  -> White, sbyte (value - 255)
 
     let writePixel pixel row col =
         pixels.[row, col] <- pixel
