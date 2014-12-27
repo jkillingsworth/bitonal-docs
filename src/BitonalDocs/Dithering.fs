@@ -21,12 +21,11 @@ type DitheringType =
 
 module Threshold =
 
-    let fixed' level = Threshold' (array2D [[ level ]])
+    let fixed' threshold = Threshold' (array2D [ [ threshold ] ])
 
     let createMatrix levels thresholds =
-        let array = array2D thresholds
-        let mapping i = byte (((1 + i) * 256) / (1 + levels))
-        let matrix = Array2D.map mapping array
+        let mapping i = (((1 + i) * 256) / (1 + levels)) - 1
+        let matrix = thresholds |> array2D |> Array2D.map (mapping >> byte)
         Threshold' matrix
 
     let dispersed8x8 =
