@@ -68,3 +68,68 @@ let ``Threshold dithering works correctly`` () =
     pixels.[3, 3] |> should equal expected.[3, 3]
     pixels.[3, 4] |> should equal expected.[3, 4]
     pixels.[3, 5] |> should equal expected.[3, 5]
+
+[<Test>]
+let ``Error diffusion custom filter should have correct values`` () =
+
+    let filter = ErrorDiffusion.createFilter 16 [| ( 8,  0, +1 ); ( 4, +1, -1 ); ( 2, +1,  0 ); ( 1, +1, +1 ) |]
+
+    match filter with
+    | ErrorDiffusion' filter
+        ->
+        let coefficients, divisor = filter
+        divisor |> should equal 16
+        coefficients.[0] |> should equal ( 8,  0, +1 )
+        coefficients.[1] |> should equal ( 4, +1, -1 )
+        coefficients.[2] |> should equal ( 2, +1,  0 )
+        coefficients.[3] |> should equal ( 1, +1, +1 )
+    | _
+        -> Assert.Fail()
+
+[<Test>]
+let ``Error diffusion dithering works correctly, scenario 1`` () =
+
+    let expected =
+        array2D
+            [ [ Black; Black; White ]
+              [ White; Black; White ] ]
+
+    let shades =
+        array2D
+            [ [ 000uy; 016uy; 120uy ]
+              [ 124uy; 219uy; 079uy ] ]
+
+    let colors = shades |> Array2D.map (fun shade -> Color(shade, shade, shade))
+    let filter = ErrorDiffusion.createFilter 16 [| ( 8,  0, +1 ); ( 4, +1, -1 ); ( 2, +1,  0 ); ( 1, +1, +1 ) |]
+    let pixels = colors |> dither filter
+
+    pixels.[0, 0] |> should equal expected.[0, 0]
+    pixels.[0, 1] |> should equal expected.[0, 1]
+    pixels.[0, 2] |> should equal expected.[0, 2]
+    pixels.[1, 0] |> should equal expected.[1, 0]
+    pixels.[1, 1] |> should equal expected.[1, 1]
+    pixels.[1, 2] |> should equal expected.[1, 2]
+
+[<Test>]
+let ``Error diffusion dithering works correctly, scenario 2`` () =
+
+    let expected =
+        array2D
+            [ [ White; White; Black ]
+              [ Black; White; Black ] ]
+
+    let shades =
+        array2D
+            [ [ 255uy; 239uy; 135uy ]
+              [ 131uy; 036uy; 176uy ] ]
+
+    let colors = shades |> Array2D.map (fun shade -> Color(shade, shade, shade))
+    let filter = ErrorDiffusion.createFilter 16 [| ( 8,  0, +1 ); ( 4, +1, -1 ); ( 2, +1,  0 ); ( 1, +1, +1 ) |]
+    let pixels = colors |> dither filter
+
+    pixels.[0, 0] |> should equal expected.[0, 0]
+    pixels.[0, 1] |> should equal expected.[0, 1]
+    pixels.[0, 2] |> should equal expected.[0, 2]
+    pixels.[1, 0] |> should equal expected.[1, 0]
+    pixels.[1, 1] |> should equal expected.[1, 1]
+    pixels.[1, 2] |> should equal expected.[1, 2]
