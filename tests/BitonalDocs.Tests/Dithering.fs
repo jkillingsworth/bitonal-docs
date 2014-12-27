@@ -2,11 +2,6 @@
 
 open NUnit.Framework
 open FsUnit
+open BitonalDocs.Dithering
 
 //-------------------------------------------------------------------------------------------------
-
-[<Test>]
-let ``This test should pass`` () = () |> should equal ()
-
-[<Test>]
-let ``This test should fail`` () = () |> should not' (equal ())
