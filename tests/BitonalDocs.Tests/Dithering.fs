@@ -133,3 +133,37 @@ let ``Error diffusion dithering works correctly, scenario 2`` () =
     pixels.[1, 0] |> should equal expected.[1, 0]
     pixels.[1, 1] |> should equal expected.[1, 1]
     pixels.[1, 2] |> should equal expected.[1, 2]
+
+[<Test>]
+let ``Error diffusion, Floyd-Steinberg filter renders checkerboard pattern for solid gray 127`` () =
+
+    let shade = 127uy
+
+    let expectedInitializer row col = if (row % 2) = (col % 2) then Black else White
+    let expected = Array2D.init 512 512 expectedInitializer
+    let colors = Array2D.create 512 512 (Color(shade, shade, shade))
+    let pixels = colors |> dither ErrorDiffusion.floydSteinberg
+
+    pixels.[0, 0] |> should equal Black
+    pixels.[0, 1] |> should equal White
+    pixels.[1, 0] |> should equal White
+    pixels.[1, 1] |> should equal Black
+
+    pixels |> should equal expected
+
+[<Test>]
+let ``Error diffusion, Floyd-Steinberg filter renders checkerboard pattern for solid gray 128`` () =
+
+    let shade = 128uy
+
+    let expectedInitializer row col = if (row % 2) = (col % 2) then White else Black
+    let expected = Array2D.init 512 512 expectedInitializer
+    let colors = Array2D.create 512 512 (Color(shade, shade, shade))
+    let pixels = colors |> dither ErrorDiffusion.floydSteinberg
+
+    pixels.[0, 0] |> should equal White
+    pixels.[0, 1] |> should equal Black
+    pixels.[1, 0] |> should equal Black
+    pixels.[1, 1] |> should equal White
+
+    pixels |> should equal expected
