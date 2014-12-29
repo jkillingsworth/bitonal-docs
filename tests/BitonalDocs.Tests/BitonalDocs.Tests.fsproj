@@ -59,6 +59,7 @@
   <ItemGroup>
     <Content Include="App.config" />
     <Content Include="packages.config" />
+    <Compile Include="Compression.fs" />
     <Compile Include="Dithering.fs" />
   </ItemGroup>
   <ItemGroup>

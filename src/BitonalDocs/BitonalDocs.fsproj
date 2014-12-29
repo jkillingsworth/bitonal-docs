@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Imaging.fs" />
+    <Compile Include="Compression.fs" />
     <Compile Include="Dithering.fs" />
     <Compile Include="Tiff.fs" />
     <Compile Include="Rendering.fs" />
