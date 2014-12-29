@@ -219,10 +219,10 @@ let private computeBrightness (image : Color[,]) row col =
 
 let private ditherThreshold matrix image =
 
-    let computeThreshold matrix image row col =
+    let computePixel row col =
+        let brightness = computeBrightness image row col
         let m = Array2D.length1 matrix
         let n = Array2D.length2 matrix
-        let brightness = computeBrightness image row col
         let threshold = matrix.[row % m, col % n]
         match brightness > threshold with
         | false -> Black
@@ -230,7 +230,7 @@ let private ditherThreshold matrix image =
 
     let rows = Array2D.length1 image
     let cols = Array2D.length2 image
-    Array2D.init rows cols (computeThreshold matrix image)
+    Array2D.init rows cols computePixel
 
 let private ditherErrorDiffusion filter image =
 

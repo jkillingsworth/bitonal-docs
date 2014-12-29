@@ -35,7 +35,7 @@ let private convertTo1Bpp (image : Pixel[,]) =
 
     let rows = Array2D.length1 image
     let cols = Array2D.length2 image
-    let stride = int (Math.Ceiling(float cols / 8.0))
+    let stride = int (ceil (double cols / 8.0))
 
     let rec reduceBits offset acc = function
         | bits when bits = 0 -> acc
@@ -53,13 +53,13 @@ let private convertTo1Bpp (image : Pixel[,]) =
         let bits = Math.Min(8, cols - offsetX)
         reduceBits offset 0uy bits
 
-    Array.Parallel.init (stride * rows) computeValue
+    Array.init (stride * rows) computeValue
 
 let createTiffImage w h resolution render =
 
-    let resolution = float32 resolution
-    let w = int (Math.Ceiling(float (resolution * w)))
-    let h = int (Math.Ceiling(float (resolution * h)))
+    let resolution = single resolution
+    let w = int (ceil (resolution * w))
+    let h = int (ceil (resolution * h))
 
     use bitmap = new Bitmap(w, h, pixelFormat)
     bitmap.SetResolution(resolution, resolution)
