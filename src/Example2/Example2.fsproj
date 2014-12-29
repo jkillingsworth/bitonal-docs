@@ -56,8 +56,8 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.fs" />
     <None Include="App.config" />
+    <Compile Include="Program.fs" />
     <EmbeddedResource Include="Lenna.tiff" />
   </ItemGroup>
   <ItemGroup>

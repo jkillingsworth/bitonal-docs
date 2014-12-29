@@ -57,9 +57,9 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
-    <Compile Include="Dithering.fs" />
     <Content Include="App.config" />
     <Content Include="packages.config" />
+    <Compile Include="Dithering.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FsUnit.NUnit">
