@@ -1,17 +1,8 @@
 ﻿module BitonalDocs.Dithering
 
+open BitonalDocs.Imaging
+
 //-------------------------------------------------------------------------------------------------
-
-[<Struct>]
-type Color =
-    val R : byte
-    val G : byte
-    val B : byte
-    new (r, g, b) = { R = r; G = g; B = b }
-
-type Pixel =
-    | Black
-    | White
 
 type DitheringType =
     | Threshold' of byte[,]

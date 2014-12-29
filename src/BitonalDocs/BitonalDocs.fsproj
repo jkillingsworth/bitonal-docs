@@ -51,9 +51,10 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Imaging.fs" />
     <Compile Include="Dithering.fs" />
     <Compile Include="Tiff.fs" />
-    <Compile Include="Imaging.fs" />
+    <Compile Include="Rendering.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

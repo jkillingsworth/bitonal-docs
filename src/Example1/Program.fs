@@ -3,7 +3,7 @@
 open System.Drawing
 open System.Drawing.Text
 open System.IO
-open BitonalDocs.Imaging
+open BitonalDocs.Rendering
 
 //-------------------------------------------------------------------------------------------------
 

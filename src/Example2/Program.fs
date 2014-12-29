@@ -3,8 +3,7 @@
 open System.Drawing
 open System.Drawing.Text
 open System.IO
-open System.Reflection
-open BitonalDocs.Imaging
+open BitonalDocs.Rendering
 
 //-------------------------------------------------------------------------------------------------
 
@@ -12,7 +11,7 @@ let private render (g : Graphics) =
 
     g.PageUnit <- GraphicsUnit.Inch
 
-    let assembly = Assembly.GetExecutingAssembly()
+    let assembly = System.Reflection.Assembly.GetExecutingAssembly()
     use stream = assembly.GetManifestResourceStream("Lenna.tiff")
     use image = Image.FromStream(stream)
 
