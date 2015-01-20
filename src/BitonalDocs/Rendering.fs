@@ -22,6 +22,7 @@ let createTiffImage w h resolution render =
     bitmap
     |> convertBitmapToColors
     |> dither (Threshold.fixed' 127uy)
-    |> convertPixelsTo1Bpp
+    |> convertPixelsTo1BppScanlines
+    |> convertScanlinesToSingleStrip
     |> Tiff.createImageFile (uint32 w) (uint32 h) (uint32 resolution)
     |> Tiff.serializeImageFile

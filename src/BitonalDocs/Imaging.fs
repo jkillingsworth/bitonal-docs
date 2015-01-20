@@ -26,7 +26,6 @@ let convertBitmapToColors (image : Bitmap) =
 
     let rows = image.Height
     let cols = image.Width
-
     let rect = Rectangle(Point.Empty, image.Size)
     let data = image.LockBits(rect, ImageLockMode.ReadOnly, bitmapPixelFormat);
     let byteCount = Math.Abs(data.Stride) * rows
@@ -43,26 +42,27 @@ let convertBitmapToColors (image : Bitmap) =
 
     Array2D.init rows cols computeValue
 
-let convertPixelsTo1Bpp (image : Pixel[,]) =
+let convertPixelsTo1BppScanlines (image : Pixel[,]) =
 
     let rows = Array2D.length1 image
     let cols = Array2D.length2 image
     let stride = int (ceil (double cols / 8.0))
 
-    let rec reduceBits offset acc = function
+    let rec reduceBits row offset acc = function
         | bits when bits = 0 -> acc
         | bits ->
-            let x = (offset % cols) + bits - 1
-            let y = (offset / cols)
-            let pixel = match image.[y, x] with Black -> 1uy | White -> 0uy
+            let col = (offset % cols) + bits - 1
+            let pixel = match image.[row, col] with Black -> 1uy | White -> 0uy
             let value = acc ||| (pixel <<< (8 - bits))
-            reduceBits offset value (bits - 1)
+            reduceBits row offset value (bits - 1)
 
-    let computeValue i =
-        let offsetY = (i / stride) * cols
-        let offsetX = (i % stride) * 8
-        let offset = offsetY + offsetX
-        let bits = Math.Min(8, cols - offsetX)
-        reduceBits offset 0uy bits
+    let computeValue row x =
+        let offset = x * 8
+        let bits = Math.Min(8, cols - offset)
+        reduceBits row offset 0uy bits
 
-    Array.init (stride * rows) computeValue
+    Array.init rows (fun row -> Array.init stride (computeValue row))
+
+let convertScanlinesToSingleStrip (image : byte[][]) =
+
+    image |> Array.concat
