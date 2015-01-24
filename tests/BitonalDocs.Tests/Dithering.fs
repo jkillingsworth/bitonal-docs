@@ -8,7 +8,7 @@ open BitonalDocs.Dithering
 //-------------------------------------------------------------------------------------------------
 
 [<Test>]
-let ``Threshold custom matrix should have correct values`` () =
+let ``Threshold, custom matrix should have correct values`` () =
 
     let matrix = Threshold.createMatrix (1 * 3) [ [ 00; 01; 02 ] ]
 
@@ -22,7 +22,7 @@ let ``Threshold custom matrix should have correct values`` () =
         -> Assert.Fail()
 
 [<Test>]
-let ``Threshold dithering works correctly`` () =
+let ``Threshold, dithering works correctly`` () =
 
     let expected =
         array2D
@@ -71,7 +71,7 @@ let ``Threshold dithering works correctly`` () =
     pixels.[3, 5] |> should equal expected.[3, 5]
 
 [<Test>]
-let ``Error diffusion custom filter should have correct values`` () =
+let ``Error diffusion, custom filter should have correct values`` () =
 
     let filter = ErrorDiffusion.createFilter 16 [| ( 8,  0, +1 ); ( 4, +1, -1 ); ( 2, +1,  0 ); ( 1, +1, +1 ) |]
 
@@ -88,7 +88,7 @@ let ``Error diffusion custom filter should have correct values`` () =
         -> Assert.Fail()
 
 [<Test>]
-let ``Error diffusion dithering works correctly, scenario 1`` () =
+let ``Error diffusion, dithering works correctly, scenario 1`` () =
 
     let expected =
         array2D
@@ -112,7 +112,7 @@ let ``Error diffusion dithering works correctly, scenario 1`` () =
     pixels.[1, 2] |> should equal expected.[1, 2]
 
 [<Test>]
-let ``Error diffusion dithering works correctly, scenario 2`` () =
+let ``Error diffusion, dithering works correctly, scenario 2`` () =
 
     let expected =
         array2D
