@@ -70,6 +70,8 @@ let ``Threshold, dithering works correctly`` () =
     pixels.[3, 4] |> should equal expected.[3, 4]
     pixels.[3, 5] |> should equal expected.[3, 5]
 
+//-------------------------------------------------------------------------------------------------
+
 [<Test>]
 let ``Error diffusion, custom filter should have correct values`` () =
 
