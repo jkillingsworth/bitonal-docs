@@ -12,7 +12,7 @@ A library for creating bi-level monochrome TIFF images.
 #### Compression
 
 * [ITU-T Recommendation T.4 - Group 3 Compression](http://www.itu.int/rec/T-REC-T.4/en)
-* [ITU-T Recommendation T.6 - Group 4 Compression](http://www.itu.int/rec/T-REC-T.4/en)
+* [ITU-T Recommendation T.6 - Group 4 Compression](http://www.itu.int/rec/T-REC-T.6/en)
 * [ITU-T Recommendation T.82 - JBIG Compression](http://www.itu.int/rec/T-REC-T.82/en)
 * [Apple Technical Note TN2013 - PackBits Compression](http://web.archive.org/web/20080705155158/http://developer.apple.com/technotes/tn/tn1023.html)
 * [Wolfgang Kowalk - CCITT Facsmile Compression Standards](http://einstein.informatik.uni-oldenburg.de/rechnernetze/fax.htm)
