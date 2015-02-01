@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <Tailcalls>false</Tailcalls>
+    <Tailcalls>true</Tailcalls>
     <BaseOutputPath>..\..\build\bin</BaseOutputPath>
     <OutputPath>$(BaseOutputPath)\$(Platform)\$(Configuration)\</OutputPath>
     <BaseIntermediateOutputPath>..\..\build\obj</BaseIntermediateOutputPath>
