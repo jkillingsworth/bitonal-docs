@@ -18,6 +18,10 @@ type Pixel =
     | Black
     | White
 
+type Bit =
+    | Bit0
+    | Bit1
+
 //-------------------------------------------------------------------------------------------------
 
 let bitmapPixelFormat = PixelFormat.Format32bppArgb
