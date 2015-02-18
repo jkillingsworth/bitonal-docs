@@ -7,12 +7,10 @@ open System.Runtime.InteropServices
 
 //-------------------------------------------------------------------------------------------------
 
-[<Struct>]
 type Color =
-    val R : byte
-    val G : byte
-    val B : byte
-    new (r, g, b) = { R = r; G = g; B = b }
+    { R : byte
+      G : byte
+      B : byte }
 
 type Pixel =
     | Black
@@ -39,10 +37,9 @@ let convertBitmapToColors (image : Bitmap) =
 
     let computeValue row col =
         let i = ((row * cols) + col) * 4
-        let r = bytes.[i + 2]
-        let g = bytes.[i + 1]
-        let b = bytes.[i + 0]
-        Color(r, g, b)
+        { R = bytes.[i + 2]
+          G = bytes.[i + 1]
+          B = bytes.[i + 0] }
 
     Array2D.init rows cols computeValue
 

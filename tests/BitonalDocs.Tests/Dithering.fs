@@ -38,7 +38,7 @@ let ``Threshold, dithering works correctly`` () =
               [ 128uy; 128uy; 128uy; 191uy; 191uy; 191uy ]
               [ 192uy; 192uy; 192uy; 255uy; 255uy; 255uy ] ]
 
-    let colors = shades |> Array2D.map (fun shade -> Color(shade, shade, shade))
+    let colors = shades |> Array2D.map (fun shade -> { R = shade; G = shade; B = shade})
     let matrix = Threshold.createMatrix (1 * 3) [ [ 00; 01; 02 ] ]
     let pixels = colors |> dither matrix
 
@@ -102,7 +102,7 @@ let ``Error diffusion, dithering works correctly, scenario 1`` () =
             [ [ 000uy; 016uy; 120uy ]
               [ 124uy; 219uy; 079uy ] ]
 
-    let colors = shades |> Array2D.map (fun shade -> Color(shade, shade, shade))
+    let colors = shades |> Array2D.map (fun shade -> { R = shade; G = shade; B = shade})
     let filter = ErrorDiffusion.createFilter 16 [| ( 8,  0, +1 ); ( 4, +1, -1 ); ( 2, +1,  0 ); ( 1, +1, +1 ) |]
     let pixels = colors |> dither filter
 
@@ -126,7 +126,7 @@ let ``Error diffusion, dithering works correctly, scenario 2`` () =
             [ [ 255uy; 239uy; 135uy ]
               [ 131uy; 036uy; 176uy ] ]
 
-    let colors = shades |> Array2D.map (fun shade -> Color(shade, shade, shade))
+    let colors = shades |> Array2D.map (fun shade -> { R = shade; G = shade; B = shade})
     let filter = ErrorDiffusion.createFilter 16 [| ( 8,  0, +1 ); ( 4, +1, -1 ); ( 2, +1,  0 ); ( 1, +1, +1 ) |]
     let pixels = colors |> dither filter
 
@@ -144,7 +144,7 @@ let ``Error diffusion, Floyd-Steinberg filter renders checkerboard pattern for s
 
     let expectedInitializer row col = if (row % 2) = (col % 2) then Black else White
     let expected = Array2D.init 512 512 expectedInitializer
-    let colors = Array2D.create 512 512 (Color(shade, shade, shade))
+    let colors = Array2D.create 512 512 { R = shade; G = shade; B = shade}
     let pixels = colors |> dither ErrorDiffusion.floydSteinberg
 
     pixels.[0, 0] |> should equal Black
@@ -161,7 +161,7 @@ let ``Error diffusion, Floyd-Steinberg filter renders checkerboard pattern for s
 
     let expectedInitializer row col = if (row % 2) = (col % 2) then White else Black
     let expected = Array2D.init 512 512 expectedInitializer
-    let colors = Array2D.create 512 512 (Color(shade, shade, shade))
+    let colors = Array2D.create 512 512 { R = shade; G = shade; B = shade}
     let pixels = colors |> dither ErrorDiffusion.floydSteinberg
 
     pixels.[0, 0] |> should equal White
