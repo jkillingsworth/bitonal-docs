@@ -58,7 +58,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <Compile Include="Program.fs" />
-    <EmbeddedResource Include="Lenna.tiff" />
+    <EmbeddedResource Include="..\..\images\Lenna.tiff">
+      <Link>Lenna.tiff</Link>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BitonalDocs\BitonalDocs.fsproj">
