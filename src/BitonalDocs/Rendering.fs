@@ -7,7 +7,7 @@ open BitonalDocs.Dithering
 
 //-------------------------------------------------------------------------------------------------
 
-let createTiffImage w h resolution render =
+let createTiffImage w h resolution render ditheringType =
 
     let resolution = single resolution
     let w = int (ceil (resolution * w))
@@ -21,7 +21,7 @@ let createTiffImage w h resolution render =
 
     bitmap
     |> convertBitmapToColors
-    |> dither (Threshold.fixed' 127uy)
+    |> dither ditheringType
     |> convertPixelsTo1BppScanlines
     |> convertScanlinesToSingleStrip
     |> Tiff.createImageFile (uint32 w) (uint32 h) (uint32 resolution)

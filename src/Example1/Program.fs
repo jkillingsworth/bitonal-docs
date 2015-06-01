@@ -4,6 +4,7 @@ open System.Drawing
 open System.Drawing.Text
 open System.IO
 open BitonalDocs.Rendering
+open BitonalDocs.Dithering
 
 //-------------------------------------------------------------------------------------------------
 
@@ -34,7 +35,7 @@ let main argv =
 
     let sw = System.Diagnostics.Stopwatch.StartNew()
 
-    let bytes = createTiffImage 8.5f 11.0f 300 render
+    let bytes = createTiffImage 8.5f 11.0f 300 render (Threshold.fixed' 127uy)
     File.WriteAllBytes(@"..\..\..\output.tiff", bytes)
 
     sw.Stop()
