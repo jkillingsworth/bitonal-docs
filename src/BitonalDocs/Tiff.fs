@@ -12,6 +12,13 @@ type ByteOrder =
 type Indicator =
     | Tiff = 42us
 
+type Compression =
+    | None = 1us
+    | Group3OneDimensional = 2us
+    | Group3TwoDimensional = 3us
+    | Group4TwoDimensional = 4us
+    | PackBits = 32773us
+
 type Value =
     | Short of uint16
     | Long of uint32
@@ -45,11 +52,11 @@ type ImageFile = ImageFileElement seq
 
 //-------------------------------------------------------------------------------------------------
 
-let private createImageFileEntries width height offsetXResolution offsetYResolution offsetImage sizeImage =
+let private createImageFileEntries width height offsetXResolution offsetYResolution offsetImage sizeImage compression =
 
     seq {
         yield { Tag = 262us; Type = 3us; Count = 1u; ValueOrOffset = Value(Short(0us)) }
-        yield { Tag = 259us; Type = 3us; Count = 1u; ValueOrOffset = Value(Short(1us)) }
+        yield { Tag = 259us; Type = 3us; Count = 1u; ValueOrOffset = Value(Short(uint16 compression)) }
         yield { Tag = 257us; Type = 4us; Count = 1u; ValueOrOffset = Value(Long(height)) }
         yield { Tag = 256us; Type = 4us; Count = 1u; ValueOrOffset = Value(Long(width)) }
         yield { Tag = 296us; Type = 3us; Count = 1u; ValueOrOffset = Value(Short(2us)) }
@@ -60,7 +67,7 @@ let private createImageFileEntries width height offsetXResolution offsetYResolut
         yield { Tag = 279us; Type = 4us; Count = 1u; ValueOrOffset = Value(Long(sizeImage)) }
     }
 
-let createImageFile width height (resolution : uint32) (bytesImage : byte[]) =
+let createImageFile width height (resolution : uint32) (compression : Compression) (bytesImage : byte[]) =
 
     let bytesResolution = Array.concat [| BitConverter.GetBytes(resolution); BitConverter.GetBytes(1u) |]
 
@@ -73,7 +80,7 @@ let createImageFile width height (resolution : uint32) (bytesImage : byte[]) =
     let offsetYResolution = offsetXResolution + sizeResolution
     let offsetDirectories = offsetYResolution + sizeResolution
 
-    let fileEntries = createImageFileEntries width height offsetXResolution offsetYResolution offsetImage sizeImage
+    let fileEntries = createImageFileEntries width height offsetXResolution offsetYResolution offsetImage sizeImage compression
 
     let fileDirectory =
         { Count = uint16 (fileEntries |> Seq.length)

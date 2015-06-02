@@ -3,11 +3,42 @@
 open System
 open System.Drawing
 open BitonalDocs.Imaging
+open BitonalDocs.Compression
 open BitonalDocs.Dithering
+open BitonalDocs.Tiff
 
 //-------------------------------------------------------------------------------------------------
 
-let createTiffImage w h resolution render ditheringType =
+let private compress = function
+
+    | None
+        -> convertPixelArrayToSeqPixels
+        >> Seq.map (Array.map convertPixelToBit)
+        >> Seq.map convertBitsTo1BppBytes
+        >> Seq.concat
+        >> Seq.toArray
+
+    | Group3OneDimensional
+        -> convertPixelArrayToSeqPixels
+        >> Seq.map compressUsingGroup3
+        >> Seq.map convertBitsTo1BppBytes
+        >> Seq.concat
+        >> Seq.toArray
+
+    | PackBits
+        -> convertPixelArrayToSeqPixels
+        >> Seq.map (Array.map convertPixelToBit)
+        >> Seq.map convertBitsTo1BppBytes
+        >> Seq.map compressUsingPackBits
+        >> Seq.concat
+        >> Seq.toArray
+
+let compression = function
+    | None -> Tiff.Compression.None
+    | Group3OneDimensional -> Tiff.Compression.Group3OneDimensional
+    | PackBits -> Tiff.Compression.PackBits
+
+let createTiffImage w h resolution render compressionType ditheringType =
 
     let resolution = single resolution
     let w = int (ceil (resolution * w))
@@ -22,7 +53,6 @@ let createTiffImage w h resolution render ditheringType =
     bitmap
     |> convertBitmapToColors
     |> dither ditheringType
-    |> convertPixelsTo1BppScanlines
-    |> convertScanlinesToSingleStrip
-    |> Tiff.createImageFile (uint32 w) (uint32 h) (uint32 resolution)
+    |> compress compressionType
+    |> Tiff.createImageFile (uint32 w) (uint32 h) (uint32 resolution) (compression compressionType)
     |> Tiff.serializeImageFile

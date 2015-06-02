@@ -4,6 +4,13 @@ open BitonalDocs.Imaging
 
 //-------------------------------------------------------------------------------------------------
 
+type CompressionType =
+    | None
+    | Group3OneDimensional
+    | PackBits
+
+//-------------------------------------------------------------------------------------------------
+
 let compressUsingPackBits scanline =
 
     let maxRunLength = 128

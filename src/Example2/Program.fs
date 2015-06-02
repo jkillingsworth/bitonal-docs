@@ -4,6 +4,7 @@ open System.Drawing
 open System.Drawing.Text
 open System.IO
 open BitonalDocs.Rendering
+open BitonalDocs.Compression
 open BitonalDocs.Dithering
 
 //-------------------------------------------------------------------------------------------------
@@ -23,7 +24,7 @@ let main argv =
 
     let sw = System.Diagnostics.Stopwatch.StartNew()
 
-    let bytes = createTiffImage 5.33f 5.33f 96 render ErrorDiffusion.floydSteinberg
+    let bytes = createTiffImage 5.33f 5.33f 96 render CompressionType.None ErrorDiffusion.floydSteinberg
     File.WriteAllBytes(@"..\..\..\output.tiff", bytes)
 
     sw.Stop()

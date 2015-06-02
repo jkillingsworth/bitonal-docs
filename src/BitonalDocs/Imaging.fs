@@ -43,27 +43,34 @@ let convertBitmapToColors (image : Bitmap) =
 
     Array2D.init rows cols computeValue
 
-let convertPixelsTo1BppScanlines (image : Pixel[,]) =
+let convertPixelArrayToSeqPixels image =
 
     let rows = Array2D.length1 image
     let cols = Array2D.length2 image
-    let stride = int (ceil (double cols / 8.0))
+    let computeValue row col = image.[row, col]
+    let computeArray row = Array.init cols (computeValue row)
+    Seq.init rows computeArray
 
-    let rec reduceBits row offset acc = function
-        | bits when bits = 0 -> acc
-        | bits ->
-            let col = (offset % cols) + bits - 1
-            let pixel = match image.[row, col] with Black -> 1uy | White -> 0uy
-            let value = acc ||| (pixel <<< (8 - bits))
-            reduceBits row offset value (bits - 1)
+let convertBitsTo1BppBytes bits =
 
-    let computeValue row x =
-        let offset = x * 8
-        let bits = Math.Min(8, cols - offset)
-        reduceBits row offset 0uy bits
+    let length = Array.length bits
+    let stride = int (ceil (double length / 8.0))
 
-    Array.init rows (fun row -> Array.init stride (computeValue row))
+    let rec reduceBits offset acc = function
+        | append when append = 0 -> acc
+        | append ->
+            let index = offset + append - 1
+            let pixel = match bits.[index] with Bit0 -> 0uy | Bit1 -> 1uy
+            let value = acc ||| (pixel <<< (8 - append))
+            reduceBits offset value (append - 1)
 
-let convertScanlinesToSingleStrip (image : byte[][]) =
+    let computeValue i =
+        let offset = i * 8
+        let append = Math.Min(8, length - offset)
+        reduceBits offset 0uy append
 
-    image |> Array.concat
+    Array.init stride computeValue
+
+let convertPixelToBit = function
+    | Black -> Bit1
+    | White -> Bit0
