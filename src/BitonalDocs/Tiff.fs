@@ -12,12 +12,21 @@ type ByteOrder =
 type Indicator =
     | Tiff = 42us
 
+type PhotometricInterpretation =
+    | WhiteIsZero = 0us
+    | BlackIsZero = 1us
+
 type Compression =
     | None = 1us
     | Group3OneDimensional = 2us
     | Group3TwoDimensional = 3us
     | Group4TwoDimensional = 4us
     | PackBits = 32773us
+
+type ResolutionUnit =
+    | None = 1us
+    | Inch = 2us
+    | Centimeter = 3us
 
 type Value =
     | Short of uint16
@@ -55,11 +64,11 @@ type ImageFile = ImageFileElement seq
 let private createImageFileEntries width height offsetXResolution offsetYResolution offsetImage sizeImage compression =
 
     seq {
-        yield { Tag = 262us; Type = 3us; Count = 1u; ValueOrOffset = Value(Short(0us)) }
+        yield { Tag = 262us; Type = 3us; Count = 1u; ValueOrOffset = Value(Short(uint16 PhotometricInterpretation.WhiteIsZero)) }
         yield { Tag = 259us; Type = 3us; Count = 1u; ValueOrOffset = Value(Short(uint16 compression)) }
         yield { Tag = 257us; Type = 4us; Count = 1u; ValueOrOffset = Value(Long(height)) }
         yield { Tag = 256us; Type = 4us; Count = 1u; ValueOrOffset = Value(Long(width)) }
-        yield { Tag = 296us; Type = 3us; Count = 1u; ValueOrOffset = Value(Short(2us)) }
+        yield { Tag = 296us; Type = 3us; Count = 1u; ValueOrOffset = Value(Short(uint16 ResolutionUnit.Inch)) }
         yield { Tag = 282us; Type = 5us; Count = 1u; ValueOrOffset = Offset(offsetXResolution) }
         yield { Tag = 283us; Type = 5us; Count = 1u; ValueOrOffset = Offset(offsetYResolution) }
         yield { Tag = 278us; Type = 4us; Count = 1u; ValueOrOffset = Value(Long(height)) }
