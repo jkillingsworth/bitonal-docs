@@ -4,7 +4,7 @@ open System
 open System.Drawing
 open System.Drawing.Imaging
 open System.Runtime.InteropServices
-open BitonalDocs.Imaging
+open BitonalDocs.Types
 open BitonalDocs.Compression
 open BitonalDocs.Dithering
 open BitonalDocs.Tiff

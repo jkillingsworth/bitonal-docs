@@ -1,7 +1,7 @@
 ﻿module BitonalDocs.Compression
 
 open System
-open BitonalDocs.Imaging
+open BitonalDocs.Types
 
 //-------------------------------------------------------------------------------------------------
 

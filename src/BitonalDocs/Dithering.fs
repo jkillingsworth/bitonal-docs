@@ -1,6 +1,6 @@
 ﻿module BitonalDocs.Dithering
 
-open BitonalDocs.Imaging
+open BitonalDocs.Types
 
 //-------------------------------------------------------------------------------------------------
 
