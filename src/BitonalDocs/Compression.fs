@@ -1,5 +1,6 @@
 ﻿module BitonalDocs.Compression
 
+open System
 open BitonalDocs.Imaging
 
 //-------------------------------------------------------------------------------------------------
@@ -244,3 +245,61 @@ let compressUsingGroup3 scanline =
     |> List.map computeCodeWordsForRun
     |> List.reduce (fun x y -> y @ x)
     |> List.toArray
+
+//-------------------------------------------------------------------------------------------------
+
+let private convertPixelArrayToSeqPixels image =
+
+    let rows = Array2D.length1 image
+    let cols = Array2D.length2 image
+    let computeValue row col = image.[row, col]
+    let computeArray row = Array.init cols (computeValue row)
+    Seq.init rows computeArray
+
+let private convertBitsTo1BppBytes bits =
+
+    let length = Array.length bits
+    let stride = int (ceil (double length / 8.0))
+
+    let rec reduceBits offset acc = function
+        | append when append = 0 -> acc
+        | append ->
+            let index = offset + append - 1
+            let pixel = match bits.[index] with Bit0 -> 0uy | Bit1 -> 1uy
+            let value = acc ||| (pixel <<< (8 - append))
+            reduceBits offset value (append - 1)
+
+    let computeValue i =
+        let offset = i * 8
+        let append = Math.Min(8, length - offset)
+        reduceBits offset 0uy append
+
+    Array.init stride computeValue
+
+let private convertPixelToBit = function
+    | Black -> Bit1
+    | White -> Bit0
+
+let compress = function
+
+    | None
+        -> convertPixelArrayToSeqPixels
+        >> Seq.map (Array.map convertPixelToBit)
+        >> Seq.map convertBitsTo1BppBytes
+        >> Seq.concat
+        >> Seq.toArray
+
+    | Group3OneDimensional
+        -> convertPixelArrayToSeqPixels
+        >> Seq.map compressUsingGroup3
+        >> Seq.map convertBitsTo1BppBytes
+        >> Seq.concat
+        >> Seq.toArray
+
+    | PackBits
+        -> convertPixelArrayToSeqPixels
+        >> Seq.map (Array.map convertPixelToBit)
+        >> Seq.map convertBitsTo1BppBytes
+        >> Seq.map compressUsingPackBits
+        >> Seq.concat
+        >> Seq.toArray
