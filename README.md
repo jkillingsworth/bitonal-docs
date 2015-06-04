@@ -2,9 +2,9 @@
 
 A library for creating bi-level monochrome TIFF images.
 
-## Links
+## References
 
-#### TIFF References
+#### TIFF
 
 * [Adobe TIFF 6.0 Specification](http://partners.adobe.com/public/developer/tiff/index.html)
 * [AWare Systems TIFF File Format](http://www.awaresystems.be/imaging/tiff.html)
@@ -33,12 +33,17 @@ A library for creating bi-level monochrome TIFF images.
 * [USC-SIPI Image Database](http://sipi.usc.edu/database/database.php)
 * [The Lenna Story](http://www.cs.cmu.edu/~chuck/lennapg/lenna.shtml)
 
-## TODO: ...
+## Notes
 
-* Compression
-* Dithering
-* Performance
-* Big endian byte order
-* Multi-strip support
-* Multi-page support
-* Nuget package
+Here are some enhancements that can be made to this project:
+
+* Consider eliminating the types module
+* Improve performance of the compression module
+* Parameterize the photometric interpretation
+* Parameterize the resolution unit
+* Parameterize the byte order
+* Support multi-strip images
+* Support multi-page documents
+* Support CCITT Group 3 two dimensional compression
+* Support CCITT Group 4 two dimensional compression
+* Create NuGet package
