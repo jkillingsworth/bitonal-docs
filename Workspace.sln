@@ -11,6 +11,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Example2", "src\Example2\Ex
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BitonalDocs.Tests", "tests\BitonalDocs.Tests\BitonalDocs.Tests.fsproj", "{3B710EB9-14DC-4B4E-9D8E-E8E5B0F70465}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Example3", "src\Example3\Example3.fsproj", "{8FBAB439-3240-4C6F-B003-8B9219EE3484}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{3B710EB9-14DC-4B4E-9D8E-E8E5B0F70465}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B710EB9-14DC-4B4E-9D8E-E8E5B0F70465}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B710EB9-14DC-4B4E-9D8E-E8E5B0F70465}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FBAB439-3240-4C6F-B003-8B9219EE3484}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FBAB439-3240-4C6F-B003-8B9219EE3484}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FBAB439-3240-4C6F-B003-8B9219EE3484}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FBAB439-3240-4C6F-B003-8B9219EE3484}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
