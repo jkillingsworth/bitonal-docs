@@ -1,12 +1,19 @@
 ﻿module BitonalDocs.Dithering
 
-open BitonalDocs.Types
-
 //-------------------------------------------------------------------------------------------------
 
 type DitheringType =
     | Threshold' of byte[,]
     | ErrorDiffusion' of ((int * int * int)[] * int)
+
+type Pixel =
+    | Black
+    | White
+
+type Color =
+    { R : byte
+      G : byte
+      B : byte }
 
 //-------------------------------------------------------------------------------------------------
 

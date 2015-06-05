@@ -37,7 +37,6 @@ A library for creating bi-level monochrome TIFF images.
 
 Here are some enhancements that can be made to this project:
 
-* Consider eliminating the types module
 * Improve performance of the compression module
 * Parameterize the photometric interpretation
 * Parameterize the resolution unit

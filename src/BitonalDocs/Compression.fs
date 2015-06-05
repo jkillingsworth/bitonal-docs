@@ -1,7 +1,6 @@
 ﻿module BitonalDocs.Compression
 
 open System
-open BitonalDocs.Types
 
 //-------------------------------------------------------------------------------------------------
 
@@ -9,6 +8,14 @@ type CompressionType =
     | None
     | Group3OneDimensional
     | PackBits
+
+type Pixel =
+    | Black
+    | White
+
+type Bit =
+    | Bit0
+    | Bit1
 
 //-------------------------------------------------------------------------------------------------
 

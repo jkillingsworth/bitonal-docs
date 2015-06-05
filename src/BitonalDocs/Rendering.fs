@@ -4,7 +4,6 @@ open System
 open System.Drawing
 open System.Drawing.Imaging
 open System.Runtime.InteropServices
-open BitonalDocs.Types
 open BitonalDocs.Compression
 open BitonalDocs.Dithering
 open BitonalDocs.Tiff
@@ -32,6 +31,10 @@ let private convertBitmapToColors (image : Bitmap) =
 
     Array2D.init rows cols computeValue
 
+let private transformPixel = function
+    | Dithering.Black -> Compression.Black
+    | Dithering.White -> Compression.White
+
 let private compression = function
     | None -> Tiff.Compression.None
     | Group3OneDimensional -> Tiff.Compression.Group3OneDimensional
@@ -52,6 +55,7 @@ let createTiffImage w h resolution render compressionType ditheringType =
     bitmap
     |> convertBitmapToColors
     |> dither ditheringType
+    |> Array2D.map transformPixel
     |> compress compressionType
     |> Tiff.createImageFile (uint32 w) (uint32 h) (uint32 resolution) (compression compressionType)
     |> Tiff.serializeImageFile
