@@ -289,26 +289,21 @@ let private convertPixelToBit = function
     | Black -> Bit1
     | White -> Bit0
 
-let compress = function
-
+let private compressionByType = function
     | None
-        -> convertPixelArrayToSeqPixels
-        >> Seq.map (Array.map convertPixelToBit)
+        -> Seq.map (Array.map convertPixelToBit)
         >> Seq.map convertBitsTo1BppBytes
-        >> Seq.concat
-        >> Seq.toArray
-
     | Group3OneDimensional
-        -> convertPixelArrayToSeqPixels
-        >> Seq.map Group3OneDimensional.compress
+        -> Seq.map Group3OneDimensional.compress
         >> Seq.map convertBitsTo1BppBytes
-        >> Seq.concat
-        >> Seq.toArray
-
     | PackBits
-        -> convertPixelArrayToSeqPixels
-        >> Seq.map (Array.map convertPixelToBit)
+        -> Seq.map (Array.map convertPixelToBit)
         >> Seq.map convertBitsTo1BppBytes
         >> Seq.map PackBits.compress
-        >> Seq.concat
-        >> Seq.toArray
+
+let compress compressionType =
+
+    convertPixelArrayToSeqPixels
+    >> compressionByType compressionType
+    >> Seq.concat
+    >> Seq.toArray
