@@ -1,7 +1,5 @@
 ﻿module BitonalDocs.Compression
 
-open System
-
 //-------------------------------------------------------------------------------------------------
 
 type CompressionType =
@@ -282,7 +280,7 @@ let private convertBitsTo1BppBytes bits =
 
     let computeValue i =
         let offset = i * 8
-        let append = Math.Min(8, length - offset)
+        let append = min 8 (length - offset)
         reduceBits offset 0uy append
 
     Array.init stride computeValue

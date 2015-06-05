@@ -1,6 +1,5 @@
 ﻿module BitonalDocs.Rendering
 
-open System
 open System.Drawing
 open System.Drawing.Imaging
 open System.Runtime.InteropServices
@@ -18,7 +17,7 @@ let private convertBitmapToColors (image : Bitmap) =
     let cols = image.Width
     let rect = Rectangle(Point.Empty, image.Size)
     let data = image.LockBits(rect, ImageLockMode.ReadOnly, bitmapPixelFormat);
-    let byteCount = Math.Abs(data.Stride) * rows
+    let byteCount = abs data.Stride * rows
     let bytes = Array.zeroCreate<byte> byteCount
     Marshal.Copy(data.Scan0, bytes, 0, byteCount)
     image.UnlockBits(data)
