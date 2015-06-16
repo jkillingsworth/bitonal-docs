@@ -14,97 +14,95 @@ The baseline image compression options are available:
 
 The following dithering options are available:
 
-* Original Color Image
-
-  ![Original Color Image](/images/dithering-original.png)
+![Original Color Image](/images/dithering-original.png)
 
 ###### Threshold Dithering
 
 * Fixed (50%)
 
-  ![Threshold - Fixed (50%)](/images/dithering-threshold-fixed-127.png)
+![Threshold - Fixed (50%)](/images/dithering-threshold-fixed-127.png)
 
 * Dispersed 2x2
 
-  ![Threshold - Dispersed 2x2](/images/dithering-threshold-dispersed2x2.png)
+![Threshold - Dispersed 2x2](/images/dithering-threshold-dispersed2x2.png)
 
 * Dispersed 4x4
 
-  ![Threshold - Dispersed 4x4](/images/dithering-threshold-dispersed4x4.png)
+![Threshold - Dispersed 4x4](/images/dithering-threshold-dispersed4x4.png)
 
 * Dispersed 8x8
 
-  ![Threshold - Dispersed 8x8](/images/dithering-threshold-dispersed8x8.png)
+![Threshold - Dispersed 8x8](/images/dithering-threshold-dispersed8x8.png)
 
 * Clustered 2x2
 
-  ![Threshold - Clustered 2x2](/images/dithering-threshold-clustered2x2.png)
+![Threshold - Clustered 2x2](/images/dithering-threshold-clustered2x2.png)
 
 * Clustered 4x4
 
-  ![Threshold - Clustered 4x4](/images/dithering-threshold-clustered4x4.png)
+![Threshold - Clustered 4x4](/images/dithering-threshold-clustered4x4.png)
 
 * Clustered 6x6
 
-  ![Threshold - Clustered 6x6](/images/dithering-threshold-clustered6x6.png)
+![Threshold - Clustered 6x6](/images/dithering-threshold-clustered6x6.png)
 
 * Clustered 8x8
 
-  ![Threshold - Clustered 8x8](/images/dithering-threshold-clustered8x8.png)
+![Threshold - Clustered 8x8](/images/dithering-threshold-clustered8x8.png)
 
 ###### Error Diffusion Dithering
 
 * Basic
 
-  ![Error Diffusion - Basic](/images/dithering-errorDiffusion-basic.png)
+![Error Diffusion - Basic](/images/dithering-errorDiffusion-basic.png)
 
 * False Floyd–Steinberg
 
-  ![Error Diffusion - False Floyd–Steinberg](/images/dithering-errorDiffusion-falseFloydSteinberg.png)
+![Error Diffusion - False Floyd–Steinberg](/images/dithering-errorDiffusion-falseFloydSteinberg.png)
 
 * Floyd–Steinberg
 
-  ![Error Diffusion - Floyd–Steinberg](/images/dithering-errorDiffusion-floydSteinberg.png)
+![Error Diffusion - Floyd–Steinberg](/images/dithering-errorDiffusion-floydSteinberg.png)
 
 * Jarvis-Judice-Ninke
 
-  ![Error Diffusion - Jarvis-Judice-Ninke](/images/dithering-errorDiffusion-jarvisJudiceNinke.png)
+![Error Diffusion - Jarvis-Judice-Ninke](/images/dithering-errorDiffusion-jarvisJudiceNinke.png)
 
 * Stucki
 
-  ![Error Diffusion - Stucki](/images/dithering-errorDiffusion-stucki.png)
+![Error Diffusion - Stucki](/images/dithering-errorDiffusion-stucki.png)
 
 * Burkes
 
-  ![Error Diffusion - Burkes](/images/dithering-errorDiffusion-burkes.png)
+![Error Diffusion - Burkes](/images/dithering-errorDiffusion-burkes.png)
 
 * Sierra 3-Row
 
-  ![Error Diffusion - Sierra 3-Row](/images/dithering-errorDiffusion-sierra3Row.png)
+![Error Diffusion - Sierra 3-Row](/images/dithering-errorDiffusion-sierra3Row.png)
 
 * Sierra 2-Row
 
-  ![Error Diffusion - Sierra 2-Row](/images/dithering-errorDiffusion-sierra2Row.png)
+![Error Diffusion - Sierra 2-Row](/images/dithering-errorDiffusion-sierra2Row.png)
 
 * Sierra Lite
 
-  ![Error Diffusion - Sierra Lite](/images/dithering-errorDiffusion-sierraLite.png)
+![Error Diffusion - Sierra Lite](/images/dithering-errorDiffusion-sierraLite.png)
 
 * Atkinson
 
-  ![Error Diffusion - Atkinson](/images/dithering-errorDiffusion-atkinson.png)
+![Error Diffusion - Atkinson](/images/dithering-errorDiffusion-atkinson.png)
 
 * Zhigang Fan
 
-  ![Error Diffusion - Zhigang Fan](/images/dithering-errorDiffusion-zhigangFan.png)
+![Error Diffusion - Zhigang Fan](/images/dithering-errorDiffusion-zhigangFan.png)
 
 * Shiau-Fan 1
 
-  ![Error Diffusion - Shiau-Fan 1](/images/dithering-errorDiffusion-shiauFan1.png)
+![Error Diffusion - Shiau-Fan 1](/images/dithering-errorDiffusion-shiauFan1.png)
 
 * Shiau-Fan 2
 
-  ![Error Diffusion - Shiau-Fan 2](/images/dithering-errorDiffusion-shiauFan2.png)
+![Error Diffusion - Shiau-Fan 2](/images/dithering-errorDiffusion-shiauFan2.png)
 
 ###### Custom Dithering
 
