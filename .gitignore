@@ -1,6 +1,6 @@
+.vs
 build
 packages
 
-*.suo
 *.VisualState.xml
 TestResult.xml
